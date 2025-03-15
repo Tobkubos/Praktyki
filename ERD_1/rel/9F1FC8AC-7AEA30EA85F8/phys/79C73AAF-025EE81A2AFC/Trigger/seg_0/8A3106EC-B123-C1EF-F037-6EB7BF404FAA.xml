@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="CATP_CATP_ID_TRG" directorySegmentName="seg_0" id="8A3106EC-B123-C1EF-F037-6EB7BF404FAA">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>CATP_CATP_ID_TRG</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:25:09 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+<actions>INSERT</actions>
+<body><![CDATA[BEGIN
+        IF: NEW.CATP_ID IS NULL THEN
+        SELECT CATP_CATP_ID_SEQ.NEXTVAL INTO :NEW.CATP_ID FROM DUAL;
+        END IF;
+    END;
+]]></body>
+<triggerTime>BEFORE</triggerTime>
+<owner>1968A2DA-DA95-C141-9AA1-58E8F857D0DC</owner>
+<table>7BAC26CD-8DE8-AA1E-04CD-3BF265D8EF1E</table>
+</TriggerOraclev10g>

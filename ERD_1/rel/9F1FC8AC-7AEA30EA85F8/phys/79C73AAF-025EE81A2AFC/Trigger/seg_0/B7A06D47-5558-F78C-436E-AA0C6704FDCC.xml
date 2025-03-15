@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="MAH_MAH_ID_TRG" directorySegmentName="seg_0" id="B7A06D47-5558-F78C-436E-AA0C6704FDCC">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>MAH_MAH_ID_TRG</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:51 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+<actions>INSERT</actions>
+<body><![CDATA[BEGIN
+        IF: NEW.MAH_ID IS NULL THEN
+        SELECT MAH_MAH_ID_SEQ.NEXTVAL INTO :NEW.MAH_ID FROM DUAL;
+        END IF;
+    END;
+]]></body>
+<triggerTime>BEFORE</triggerTime>
+<owner>1968A2DA-DA95-C141-9AA1-58E8F857D0DC</owner>
+<table>88F08F7E-C5C1-90E3-AF4D-6FC4D95C300B</table>
+</TriggerOraclev10g>

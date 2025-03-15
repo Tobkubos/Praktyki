@@ -1,0 +1,87 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v12c.TableProxyOraclev12c" name="MAH" directorySegmentName="seg_0" id="88F08F7E-C5C1-90E3-AF4D-6FC4D95C300B">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:51 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+<schemaObject>8E9FD266-396D-F3C4-08F6-8619110F1116</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>372A32E7-F6C4-C65C-42D9-2D97353CBD62</segment>
+<tableSpace>C312D245-ACA0-317F-42CA-E6C9F2652A54</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<inMemory>NO</inMemory>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="MAH_MAH_ID_PK" id="9EC307A2-BD12-B0C9-E080-7140F5F1B707">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:51 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+<schemaObject>8E9FD266-396D-F3C4-08F6-8619110F1116</schemaObject>
+<segment>A257F2BF-0FBE-C46D-EF97-83084AD52805</segment>
+<tableSpace>C312D245-ACA0-317F-42CA-E6C9F2652A54</tableSpace>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="MAH_CUSR_ID_USR_ID_FK" id="7F7D6E03-0124-D28B-C891-CAAF1888B42A">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:51 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="MAH_UUSR_ID_USR_ID_FK" id="F63E4522-310F-BC4F-27E1-A9BACEA714B7">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:51 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="MAH_MAH_ID_PK" id="0A03E1E3-20D9-DB8A-8FD6-974758DC8C38">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:51 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+<segment>A257F2BF-0FBE-C46D-EF97-83084AD52805</segment>
+<tableSpace>C312D245-ACA0-317F-42CA-E6C9F2652A54</tableSpace>
+<existingIndex>9EC307A2-BD12-B0C9-E080-7140F5F1B707</existingIndex>
+<indexSegment>A257F2BF-0FBE-C46D-EF97-83084AD52805</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+<tableCheckConstraints itemClass="oracle.dbtools.crest.model.design.storage.oracle.TableCheckConstraintOracle">
+<TableCheckConstraint name="SYS_C008318" id="32BB3C85-1D4E-59C1-EEC3-0BB403C4070D">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:51 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008330" id="5DDC5EBB-2811-B190-2D62-ECFD63516FE6">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:51 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008327" id="63B8CC96-A922-6A1F-B95A-CF9EFE1536D9">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:51 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008317" id="877299D7-727C-CF07-AAC1-D24C82768432">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:51 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008319" id="99C121A2-9ED6-082F-19B8-32A638C72BD4">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:51 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008328" id="B9596E57-06B3-FC72-5583-1FCD30DB64D6">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:51 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008329" id="CE704BD6-4396-F2CA-8B03-FB6F8E70EE15">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:51 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+</tableCheckConstraints>
+</TableProxyOraclev12c>

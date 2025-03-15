@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="PROD_PROD_ID_TRG" directorySegmentName="seg_0" id="FF4798A4-6379-C6C4-CFE2-DE4A3989A762">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>PROD_PROD_ID_TRG</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+<actions>INSERT</actions>
+<body><![CDATA[BEGIN
+        IF: NEW.PROD_ID IS NULL THEN
+        SELECT PROD_PROD_ID_SEQ.NEXTVAL INTO :NEW.PROD_ID FROM DUAL;
+        END IF;
+    END;
+]]></body>
+<triggerTime>BEFORE</triggerTime>
+<owner>1968A2DA-DA95-C141-9AA1-58E8F857D0DC</owner>
+<table>C68F7805-2792-4C92-98CA-A3AD557F9AB6</table>
+</TriggerOraclev10g>

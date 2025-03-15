@@ -1,0 +1,112 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v12c.TableProxyOraclev12c" name="PROD" directorySegmentName="seg_0" id="C68F7805-2792-4C92-98CA-A3AD557F9AB6">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+<schemaObject>8E9FD266-396D-F3C4-08F6-8619110F1116</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>372A32E7-F6C4-C65C-42D9-2D97353CBD62</segment>
+<tableSpace>C312D245-ACA0-317F-42CA-E6C9F2652A54</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<inMemory>NO</inMemory>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="PROD_PROD_ID_PK" id="C039541F-ABE9-3154-BCDC-3C044480C118">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+<schemaObject>8E9FD266-396D-F3C4-08F6-8619110F1116</schemaObject>
+<segment>A257F2BF-0FBE-C46D-EF97-83084AD52805</segment>
+<tableSpace>C312D245-ACA0-317F-42CA-E6C9F2652A54</tableSpace>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="PROD_UUSR_ID_USR_ID_FK" id="34C76467-61A5-12F5-CD5F-EF61AE3BC51C">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="PROD_CUSR_ID_USR_ID_FK" id="F05E5996-EAA8-ADAB-4DCD-824FEE8193D0">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="PROD_PROD_ID_PK" id="DAF3BD6E-6F1A-0E9C-8F6F-FD3C601123FA">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+<segment>A257F2BF-0FBE-C46D-EF97-83084AD52805</segment>
+<tableSpace>C312D245-ACA0-317F-42CA-E6C9F2652A54</tableSpace>
+<existingIndex>C039541F-ABE9-3154-BCDC-3C044480C118</existingIndex>
+<indexSegment>A257F2BF-0FBE-C46D-EF97-83084AD52805</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+<tableCheckConstraints itemClass="oracle.dbtools.crest.model.design.storage.oracle.TableCheckConstraintOracle">
+<TableCheckConstraint name="SYS_C008259" id="12C5A448-3303-15D8-A48A-6356A88C9978">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008257" id="16BE72FE-2F46-4687-DEBD-8F7AB8B5C8B0">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008256" id="1E0CF93F-FE3A-C145-E24F-54EC3EBC7C34">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008254" id="319F9445-DB7F-43A0-B285-D8D7D872A6E6">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008261" id="35498945-0BEF-987C-24B1-1B9B9761783F">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008286" id="3A58AE10-638B-86D2-1AA4-C37E76D3AAD8">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008289" id="41374EAB-8726-C9F8-0F2E-044033F52A9D">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008255" id="60DD8677-0051-1686-BE4C-B2E4D1F3973C">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008287" id="94BC88C9-914F-4045-6B07-90476A9BECB4">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008258" id="AFE42FD6-D236-941A-79CC-2818654B6CF5">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008260" id="B36BF224-B413-C8DB-1F77-5EB6376C01E6">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008288" id="F282275B-01E5-96B7-27F1-F55FF35E4D85">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-15 12:24:43 UTC</createdTime>
+<ownerDesignName>ERD_1</ownerDesignName>
+</TableCheckConstraint>
+</tableCheckConstraints>
+</TableProxyOraclev12c>
