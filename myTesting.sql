@@ -300,3 +300,57 @@ COMMENT ON COLUMN MAH.UPDATED_DT IS 'Data aktualizacji';
 COMMENT ON COLUMN MAH.CUSR_ID IS 'ID użytkownika który stworzył rekord';
 COMMENT ON COLUMN MAH.UUSR_ID IS 'ID użytkownika który zaktualizował rekord';
 
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(P_USR_ID NUMBER) AS
+    CURSOR cur_source IS
+        SELECT BLZ7_ID, KEAN, NAZW, POST, DAWK, OPAK, STOCK, PRICE 
+        FROM EXAMPLE_PRODUCT_MODEL;
+    
+    v_post_clean VARCHAR2(100);
+    v_dawk_clean VARCHAR2(100);
+    v_category_name VARCHAR2(100);
+BEGIN
+    FOR rec IN cur_source LOOP
+        v_post_clean := TRIM(REPLACE(rec.POST, '-', ''));
+        v_dawk_clean := TRIM(REPLACE(rec.DAWK, '-', ''));
+
+        v_category_name := GET_CATEGORY_NAME(v_post_clean);
+
+    END LOOP;
+END;
+/
+EXEC PROCEDURE_1_P(12345);
+DELETE FROM PROD;
+
+
+
+CREATE OR REPLACE FUNCTION GET_CATEGORY_NAME(p_post VARCHAR2) RETURN VARCHAR2 IS
+    v_category VARCHAR2(100);
+BEGIN
+    v_category := REGEXP_SUBSTR(TRIM(p_post), '^\S+|^[^.]+');
+    
+    IF v_category IS NOT NULL THEN
+        RETURN 'POSTAC: ' || v_category;
+    ELSE
+        RETURN NULL;
+    END IF;
+END;
+/
+
+
+
+
+
+
+
