@@ -60,5 +60,29 @@ CREATE OR REPLACE TRIGGER PROD_PROD_ID_TRG
     END;
 /
 
+CREATE TABLE CAPT(
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 
