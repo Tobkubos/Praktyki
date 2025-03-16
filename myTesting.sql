@@ -314,43 +314,193 @@ COMMENT ON COLUMN MAH.UUSR_ID IS 'ID użytkownika który zaktualizował rekord';
 
 CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(P_USR_ID NUMBER) AS
     CURSOR cur_source IS
-        SELECT BLZ7_ID, KEAN, NAZW, POST, DAWK, OPAK, STOCK, PRICE 
+        SELECT BLZ7_ID, KEAN, NAZW, POST, DAWK, OPAK, STOCK, PRICE, NPRD, PNZW, PKRJ
         FROM EXAMPLE_PRODUCT_MODEL;
     
     v_post_clean VARCHAR2(100);
     v_dawk_clean VARCHAR2(100);
     v_category_name VARCHAR2(100);
-BEGIN
+    
+    v_prod_id NUMBER;
+    v_mah_id NUMBER;
+    v_capt_id NUMBER;
+    
+        
+        FUNCTION FUNCTION_2_F(p_post VARCHAR2) RETURN VARCHAR2 IS
+            v_category VARCHAR2(100);
+        BEGIN
+            v_category := REGEXP_SUBSTR(TRIM(p_post), '^\S+|^[^.]+');
+            
+            IF v_category IS NOT NULL THEN
+                RETURN 'POSTAC: ' || v_category;
+            ELSE
+                RETURN NULL;
+            END IF;
+        END FUNCTION_2_F;
+
+
+    BEGIN
     FOR rec IN cur_source LOOP
-        v_post_clean := TRIM(REPLACE(rec.POST, '-', ''));
-        v_dawk_clean := TRIM(REPLACE(rec.DAWK, '-', ''));
+        -- 1. myslniki i spacje
+        v_post_clean := FUNCTION_1_F(rec.POST);
+        v_dawk_clean := FUNCTION_1_F(rec.DAWK);
 
-        v_category_name := GET_CATEGORY_NAME(v_post_clean);
+        -- 2. nazwa kat
+        v_category_name := FUNCTION_2_F(v_post_clean);
 
+
+        -- Na poczatku sprawdzamy MAH, poniewaz PROD wymaga podania MAH_ID
+        BEGIN
+            SELECT MAH_ID INTO v_mah_id 
+            FROM MAH 
+            WHERE NAME = rec.PNZW 
+            FOR UPDATE NOWAIT;
+            
+            UPDATE MAH 
+                SET COUNTRY = rec.PKRJ,
+                    UUSR_ID = P_USR_ID,
+                    UPDATED_DT = SYSDATE
+                WHERE MAH_ID = v_mah_id;
+        
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                SELECT MAH_MAH_ID_SEQ.NEXTVAL INTO v_mah_id FROM DUAL;
+                
+                INSERT INTO MAH (MAH_ID, NAME, COUNTRY, CREATED_DT, UPDATED_DT, CUSR_ID, UUSR_ID)
+                VALUES (v_mah_id, rec.PNZW, rec.PKRJ, SYSDATE, SYSDATE, P_USR_ID, P_USR_ID);
+        END;
+        
+        
+        -- Sprawdzenie czy produkt juz istnieje po numerze GTIN
+        BEGIN
+            SELECT PROD_ID INTO v_prod_id
+                FROM PROD
+                WHERE GTIN = rec.KEAN
+                FOR UPDATE NOWAIT;
+            
+            UPDATE PROD
+                SET 
+                    PROD_NAME = rec.nazw,
+                    PROD_FORM = v_post_clean,
+                    PROD_STRENGTH = v_dawk_clean,
+                    PROD_PACKAGE = rec.OPAK,
+                    PROD_STOCK = rec.STOCK,
+                    PROD_PRICE = rec.PRICE,
+                    UUSR_ID = P_USR_ID_ID,
+                    UPDATED_DT = SYSDATE
+                WHERE PROD_ID = v_prod_id;
+                
+            EXCEPTION
+                WHEN NO_DATA_FOUND THEN
+                    SELECT PROD_PROD_ID_SEQ.NEXTVAL INTO v_prod_id FROM DUAL;
+                    
+                    INSERT INTO PROD(PROD_ID, PROD_NAME, PROD_FORM, PROD_STRENGTH, PROD_PACKAGE, MAH_ID, BLZ7, GTIN, PROD_STOCK, PROD_PRICE, CREATED_DT, UPDATED_DT, CUSR_ID, UUSR_ID)
+                    VALUES (v_prod_id, rec.NAZW, rec.POST, rec.DAWK, rec.OPAK, v_mah_id, rec.BLZ7_ID, rec.KEAN, rec.STOCK, rec.PRICE, SYSDATE, SYSDATE, P_USR_ID, P_USR_ID);
+        END;
+        
     END LOOP;
 END;
 /
-EXEC PROCEDURE_1_P(12345);
-DELETE FROM PROD;
 
-
-
-CREATE OR REPLACE FUNCTION GET_CATEGORY_NAME(p_post VARCHAR2) RETURN VARCHAR2 IS
-    v_category VARCHAR2(100);
+CREATE OR REPLACE FUNCTION FUNCTION_1_F(p_text VARCHAR2) RETURN VARCHAR2 IS
+    v_clean_text VARCHAR2(100);
 BEGIN
-    v_category := REGEXP_SUBSTR(TRIM(p_post), '^\S+|^[^.]+');
+    v_clean_text := REPLACE(p_text, '-', '');
+    v_clean_text := REPLACE(v_clean_text, ' ', '');
     
-    IF v_category IS NOT NULL THEN
-        RETURN 'POSTAC: ' || v_category;
-    ELSE
-        RETURN NULL;
+    RETURN v_clean_text;
+END FUNCTION_1_F;
+/
+
+
+CREATE OR REPLACE FUNCTION FUNCTION_3_F(
+    p_prod_id NUMBER,         -- PROD_ID, na podstawie którego pobieramy dane
+    p_include_prefix BOOLEAN, -- TRUE = dodajemy "(#PROD_ID)"
+    p_include_suffix BOOLEAN  -- TRUE = dodajemy "MAH: NazwaProducenta"
+    
+) RETURN VARCHAR2 IS
+    v_prod_name     VARCHAR2(100);
+    v_prod_form     VARCHAR2(50);
+    v_prod_strength VARCHAR2(50);
+    v_prod_package  VARCHAR2(50);
+    v_mah_name      VARCHAR2(100);
+    v_result        VARCHAR2(500);
+    
+    -- Pomocnicza funkcja do usunięcia nadmiarowych myślników
+    FUNCTION CLEAN_DASHES(p_text VARCHAR2) RETURN VARCHAR2 IS
+    BEGIN
+        RETURN REGEXP_REPLACE(TRIM(p_text), '-{2,}', '-'); -- Zamiana "--" na "-"
+    END CLEAN_DASHES;
+    
+BEGIN
+    -- Pobranie danych z tabeli PROD i MAH
+    SELECT PROD.PROD_NAME, PROD.PROD_FORM, PROD.PROD_STRENGTH, PROD.PROD_PACKAGE, MAH.NAME 
+    INTO v_prod_name, v_prod_form, v_prod_strength, v_prod_package, v_mah_name
+    FROM PROD
+    LEFT JOIN MAH ON PROD.MAH_ID = MAH.MAH_ID
+    WHERE PROD.PROD_ID = p_prod_id;
+
+    -- Usunięcie nadmiarowych myślników z każdego pola
+    v_prod_name     := CLEAN_DASHES(v_prod_name);
+    v_prod_form     := CLEAN_DASHES(v_prod_form);
+    v_prod_strength := CLEAN_DASHES(v_prod_strength);
+    v_prod_package  := CLEAN_DASHES(v_prod_package);
+
+    -- Tworzenie głównej nazwy produktu
+    v_result := v_prod_name || ' ' || v_prod_form || ' ' || v_prod_strength || ' ' || v_prod_package;
+
+    -- Dodanie prefixu "(#PROD_ID) " jeśli wymagane
+    IF p_include_prefix THEN
+        v_result := '(#' || p_prod_id || ') ' || v_result;
     END IF;
-END;
+
+    -- Dodanie suffixu "MAH: NazwaProducenta" jeśli wymagane i jeśli producent istnieje
+    IF p_include_suffix AND v_mah_name IS NOT NULL THEN
+        v_result := v_result || ' MAH: ' || v_mah_name;
+    END IF;
+
+    -- Usunięcie nadmiarowych spacji
+    v_result := REGEXP_REPLACE(v_result, '\s+', ' ');
+
+    RETURN v_result;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN 'BRAK DANYCH DLA PROD_ID: ' || p_prod_id;
+    WHEN OTHERS THEN
+        RETURN 'BŁĄD: ' || SQLERRM;
+END FUNCTION_3_F;
+/
+
+CREATE OR REPLACE FUNCTION FUNCTION_4_F(
+    p_catp_id NUMBER
+) RETURN VARCHAR2 IS
+    v_category_name VARCHAR(100);
+    v_product_count NUMBER;
+    v_result VARCHAR2(200);
+    
+BEGIN 
+    SELECT CATP.NAME, COUNT(CAPT_PROD_ID)
+    INTO v_category_name, v_product_count
+    FROM CATP
+    LEFT JOIN CATP_PROD ON CATP.CATP_ID = CATP_PROD.CATP_ID
+    WHERE CATP.CATP_ID = p_catp_id
+    GROUP BY CATP.NAME;
+    
+    v_result := 'POSTAC: ' || v_category_name || ' (' || v_product_count || ' )';
+    
+    RETURN v_result;
+    
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RETURN 'BRAK DANYCH DLA CATP_ID' || p_catp_id;
+    WHEN OTHERS THEN
+        RETURN 'BŁĄD || SQLERRM';
+END FUNCTION_4_F;
 /
 
 
 
 
-
-
-
+EXEC PROCEDURE_1_P(12345);
+DELETE FROM PROD;
