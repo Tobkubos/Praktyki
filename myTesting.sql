@@ -1,18 +1,22 @@
 --system tobiasz
 --MY_TESTING MY_TESTING
-
+SET SERVEROUTPUT ON;
 /*
-DROP TABLE USERS;
-DROP TABLE PROD;
-DROP TABLE CATP;
-DROP TABLE CATP_PROD;
-DROP TABLE MAH;
+TRUNCATE TABLE CATP_PROD;
+TRUNCATE TABLE PROD;
+TRUNCATE TABLE CATP;
+TRUNCATE TABLE MAH;
+TRUNCATE TABLE USERS;
 DROP SEQUENCE USERS_USR_ID_SEQ;
 DROP SEQUENCE PROD_PROD_ID_SEQ;
 DROP SEQUENCE CATP_CATP_ID_SEQ;
 DROP SEQUENCE CATP_PROD_CATP_PROD_ID_SEQ;
 DROP SEQUENCE MAH_MAH_ID_SEQ;
+
+
 */
+ALTER TABLE PROD
+MODIFY PROD_NAME VARCHAR2(120);
 
 CREATE TABLE USERS(
     USR_ID NUMBER(10),
@@ -27,6 +31,9 @@ COMMENT ON COLUMN USERS.USR_ID IS 'Klucz główny';
 COMMENT ON COLUMN USERS.NAME IS 'Imię';
 COMMENT ON COLUMN USERS.SURNAME IS 'Nazwisko';
 COMMENT ON COLUMN USERS.EMAIL IS 'e-mail';
+
+--INSERT INTO USERS (USR_ID, NAME, SURNAME, EMAIL, CUSR_ID, UUSR_ID) VALUES (USERS_USR_ID_SEQ.NEXTVAL, 'System', 'User', 'system@example.com', USERS_USR_ID_SEQ.CURRVAL, USERS_USR_ID_SEQ.CURRVAL);
+
 
 CREATE SEQUENCE USERS_USR_ID_SEQ
     START WITH 1
@@ -58,7 +65,7 @@ CREATE TABLE PROD(
     PROD_NAME VARCHAR(80) NOT NULL,
     PROD_FORM VARCHAR(20),
     PROD_STRENGTH VARCHAR2(20),
-    PROD_PACKAGE VARCHAR2(20),
+    PROD_PACKAGE VARCHAR2(40),
     MAH_ID NUMBER(10) NOT NULL,
     BLZ7 NUMBER(10),
     GTIN NUMBER(13),
@@ -310,98 +317,6 @@ COMMENT ON COLUMN MAH.UUSR_ID IS 'ID użytkownika który zaktualizował rekord';
 
 
 
-
-
-CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(P_USR_ID NUMBER) AS
-    CURSOR cur_source IS
-        SELECT BLZ7_ID, KEAN, NAZW, POST, DAWK, OPAK, STOCK, PRICE, NPRD, PNZW, PKRJ
-        FROM EXAMPLE_PRODUCT_MODEL;
-    
-    v_post_clean VARCHAR2(100);
-    v_dawk_clean VARCHAR2(100);
-    v_category_name VARCHAR2(100);
-    
-    v_prod_id NUMBER;
-    v_mah_id NUMBER;
-    v_capt_id NUMBER;
-    
-        
-        FUNCTION FUNCTION_2_F(p_post VARCHAR2) RETURN VARCHAR2 IS
-            v_category VARCHAR2(100);
-        BEGIN
-            v_category := REGEXP_SUBSTR(TRIM(p_post), '^\S+|^[^.]+');
-            
-            IF v_category IS NOT NULL THEN
-                RETURN 'POSTAC: ' || v_category;
-            ELSE
-                RETURN NULL;
-            END IF;
-        END FUNCTION_2_F;
-
-
-    BEGIN
-    FOR rec IN cur_source LOOP
-        -- 1. myslniki i spacje
-        v_post_clean := FUNCTION_1_F(rec.POST);
-        v_dawk_clean := FUNCTION_1_F(rec.DAWK);
-
-        -- 2. nazwa kat
-        v_category_name := FUNCTION_2_F(v_post_clean);
-
-
-        -- Na poczatku sprawdzamy MAH, poniewaz PROD wymaga podania MAH_ID
-        BEGIN
-            SELECT MAH_ID INTO v_mah_id 
-            FROM MAH 
-            WHERE NAME = rec.PNZW 
-            FOR UPDATE NOWAIT;
-            
-            UPDATE MAH 
-                SET COUNTRY = rec.PKRJ,
-                    UUSR_ID = P_USR_ID,
-                    UPDATED_DT = SYSDATE
-                WHERE MAH_ID = v_mah_id;
-        
-        EXCEPTION
-            WHEN NO_DATA_FOUND THEN
-                SELECT MAH_MAH_ID_SEQ.NEXTVAL INTO v_mah_id FROM DUAL;
-                
-                INSERT INTO MAH (MAH_ID, NAME, COUNTRY, CREATED_DT, UPDATED_DT, CUSR_ID, UUSR_ID)
-                VALUES (v_mah_id, rec.PNZW, rec.PKRJ, SYSDATE, SYSDATE, P_USR_ID, P_USR_ID);
-        END;
-        
-        
-        -- Sprawdzenie czy produkt juz istnieje po numerze GTIN
-        BEGIN
-            SELECT PROD_ID INTO v_prod_id
-                FROM PROD
-                WHERE GTIN = rec.KEAN
-                FOR UPDATE NOWAIT;
-            
-            UPDATE PROD
-                SET 
-                    PROD_NAME = rec.nazw,
-                    PROD_FORM = v_post_clean,
-                    PROD_STRENGTH = v_dawk_clean,
-                    PROD_PACKAGE = rec.OPAK,
-                    PROD_STOCK = rec.STOCK,
-                    PROD_PRICE = rec.PRICE,
-                    UUSR_ID = P_USR_ID_ID,
-                    UPDATED_DT = SYSDATE
-                WHERE PROD_ID = v_prod_id;
-                
-            EXCEPTION
-                WHEN NO_DATA_FOUND THEN
-                    SELECT PROD_PROD_ID_SEQ.NEXTVAL INTO v_prod_id FROM DUAL;
-                    
-                    INSERT INTO PROD(PROD_ID, PROD_NAME, PROD_FORM, PROD_STRENGTH, PROD_PACKAGE, MAH_ID, BLZ7, GTIN, PROD_STOCK, PROD_PRICE, CREATED_DT, UPDATED_DT, CUSR_ID, UUSR_ID)
-                    VALUES (v_prod_id, rec.NAZW, rec.POST, rec.DAWK, rec.OPAK, v_mah_id, rec.BLZ7_ID, rec.KEAN, rec.STOCK, rec.PRICE, SYSDATE, SYSDATE, P_USR_ID, P_USR_ID);
-        END;
-        
-    END LOOP;
-END;
-/
-
 CREATE OR REPLACE FUNCTION FUNCTION_1_F(p_text VARCHAR2) RETURN VARCHAR2 IS
     v_clean_text VARCHAR2(100);
 BEGIN
@@ -480,7 +395,7 @@ CREATE OR REPLACE FUNCTION FUNCTION_4_F(
     v_result VARCHAR2(200);
     
 BEGIN 
-    SELECT CATP.NAME, COUNT(CAPT_PROD_ID)
+    SELECT CATP.NAME, COUNT(CATP_PROD_ID)
     INTO v_category_name, v_product_count
     FROM CATP
     LEFT JOIN CATP_PROD ON CATP.CATP_ID = CATP_PROD.CATP_ID
@@ -502,5 +417,125 @@ END FUNCTION_4_F;
 
 
 
-EXEC PROCEDURE_1_P(12345);
-DELETE FROM PROD;
+
+
+CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(P_USR_ID NUMBER) AS
+    CURSOR cur_source IS
+        SELECT BLZ7_ID, KEAN, NAZW, POST, DAWK, OPAK, STOCK, PRICE, NPRD, PNZW, PKRJ
+        FROM EXAMPLE_PRODUCT_MODEL;
+    
+    v_post_clean VARCHAR2(100);
+    v_dawk_clean VARCHAR2(100);
+    v_category_name VARCHAR2(100);
+    
+    v_prod_id NUMBER;
+    v_mah_id NUMBER;
+    v_catp_id NUMBER;
+    v_catp_prod_id NUMBER;
+    
+        
+        FUNCTION FUNCTION_2_F(p_post VARCHAR2) RETURN VARCHAR2 IS
+            v_category VARCHAR2(100);
+        BEGIN
+            v_category := REGEXP_SUBSTR(TRIM(p_post), '^\S+|^[^.]+');
+            
+            IF v_category IS NOT NULL THEN
+                RETURN 'POSTAC: ' || v_category;
+            ELSE
+                RETURN 'POSTAC: NIEZNANA';
+            END IF;
+        END FUNCTION_2_F;
+
+
+    BEGIN
+    FOR rec IN cur_source LOOP
+        -- 1. myslniki i spacje
+        DBMS_OUTPUT.PUT_LINE('rec.POST: ' || NVL(rec.POST, 'NULL'));
+        v_post_clean := FUNCTION_1_F(rec.POST);
+        v_dawk_clean := FUNCTION_1_F(rec.DAWK);
+        DBMS_OUTPUT.PUT_LINE('v_post: ' || NVL(v_post_clean, 'NULL'));
+        -- 2. nazwa kat
+        v_category_name := FUNCTION_2_F(v_post_clean);
+ 
+        DBMS_OUTPUT.PUT_LINE('v_category: ' || NVL(v_category_name, 'NULL'));
+
+        -- Na poczatku sprawdzamy MAH, poniewaz PROD wymaga podania MAH_ID
+        BEGIN
+            SELECT MAH_ID INTO v_mah_id 
+            FROM MAH 
+            WHERE NAME = rec.PNZW 
+            FOR UPDATE NOWAIT;
+            
+            UPDATE MAH 
+                SET COUNTRY = NVL(rec.PKRJ, 'BRAK WPISU'),
+                    UUSR_ID = P_USR_ID,
+                    UPDATED_DT = SYSDATE
+                WHERE MAH_ID = v_mah_id;
+        
+        EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+                SELECT MAH_MAH_ID_SEQ.NEXTVAL INTO v_mah_id FROM DUAL;
+                
+                INSERT INTO MAH (MAH_ID, NAME, COUNTRY, CREATED_DT, UPDATED_DT, CUSR_ID, UUSR_ID)
+                VALUES (v_mah_id, rec.PNZW, NVL(rec.PKRJ, 'BRAK WPISU'), SYSDATE, SYSDATE, P_USR_ID, P_USR_ID);
+        END;
+        
+        
+        -- Sprawdzenie czy produkt juz istnieje po numerze GTIN
+        BEGIN
+            SELECT PROD_ID INTO v_prod_id
+                FROM PROD
+                WHERE GTIN = rec.KEAN
+                FOR UPDATE NOWAIT;
+            
+            UPDATE PROD
+                SET 
+                    PROD_NAME = rec.nazw,
+                    PROD_FORM = v_post_clean,
+                    PROD_STRENGTH = v_dawk_clean,
+                    PROD_PACKAGE = rec.OPAK,
+                    PROD_STOCK = rec.STOCK,
+                    PROD_PRICE = rec.PRICE,
+                    UUSR_ID = P_USR_ID,
+                    UPDATED_DT = SYSDATE
+                WHERE PROD_ID = v_prod_id;
+                
+            EXCEPTION
+                WHEN NO_DATA_FOUND THEN
+                    SELECT PROD_PROD_ID_SEQ.NEXTVAL INTO v_prod_id FROM DUAL;
+                    
+                    INSERT INTO PROD(PROD_ID, PROD_NAME, PROD_FORM, PROD_STRENGTH, PROD_PACKAGE, MAH_ID, BLZ7, GTIN, PROD_STOCK, PROD_PRICE, CREATED_DT, UPDATED_DT, CUSR_ID, UUSR_ID)
+                    VALUES (v_prod_id, rec.NAZW, rec.POST, rec.DAWK, rec.OPAK, v_mah_id, rec.BLZ7_ID, rec.KEAN, rec.STOCK, rec.PRICE, SYSDATE, SYSDATE, P_USR_ID, P_USR_ID);
+        END;
+        
+        -- sprawdzenie czy CATP juz istnieje
+        BEGIN
+            SELECT CATP_ID into v_catp_id 
+                FROM CATP
+                WHERE NAME = v_category_name
+                FOR UPDATE NOWAIT;
+                
+            EXCEPTION
+                WHEN NO_DATA_FOUND THEN
+                    SELECT CATP_CATP_ID_SEQ.NEXTVAL INTO v_catp_id FROM DUAL;
+                    INSERT INTO CATP(CATP_ID, NAME, CREATED_DT, UPDATED_DT, CUSR_ID, UUSR_ID)
+                    VALUES(v_catp_id, v_category_name, SYSDATE, SYSDATE, P_USR_ID, P_USR_ID);
+        END;
+        
+        -- sprawdzenie czy CATP_PROD juz istnieje
+        BEGIN
+            INSERT INTO CATP_PROD (CATP_PROD_ID, CATP_ID, PROD_ID, CUSR_ID, UUSR_ID)
+            SELECT CATP_PROD_CATP_PROD_ID_SEQ.NEXTVAL, v_catp_id, v_prod_id, P_USR_ID, P_USR_ID FROM DUAL
+            WHERE NOT EXISTS(
+            SELECT 1 FROM CATP_PROD WHERE CATP_ID = v_catp_id AND PROD_ID = v_prod_id);
+        END;
+        
+    END LOOP;
+END;
+/
+
+
+
+
+
+EXEC PROCEDURE_1_P(2);
