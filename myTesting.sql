@@ -32,14 +32,8 @@ COMMENT ON COLUMN USERS.NAME IS 'Imię';
 COMMENT ON COLUMN USERS.SURNAME IS 'Nazwisko';
 COMMENT ON COLUMN USERS.EMAIL IS 'e-mail';
 
---INSERT INTO USERS (USR_ID, NAME, SURNAME, EMAIL, CUSR_ID, UUSR_ID) VALUES (USERS_USR_ID_SEQ.NEXTVAL, 'System', 'User', 'system@example.com', USERS_USR_ID_SEQ.CURRVAL, USERS_USR_ID_SEQ.CURRVAL);
 
-
-CREATE SEQUENCE USERS_USR_ID_SEQ
-    START WITH 1
-    INCREMENT BY 1
-    NOCACHE
-    NOCYCLE;
+CREATE SEQUENCE USERS_USR_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
     
 CREATE OR REPLACE TRIGGER USERS_USR_ID_TRG
     BEFORE INSERT ON USERS
@@ -50,9 +44,36 @@ CREATE OR REPLACE TRIGGER USERS_USR_ID_TRG
         END IF;
     END;
 /
+--INSERT INTO USERS (USR_ID, NAME, SURNAME, EMAIL, CUSR_ID, UUSR_ID) VALUES (USERS_USR_ID_SEQ.NEXTVAL, 'MY_TESTING', 'MY_TESTING', 'my_testing@test.com', USERS_USR_ID_SEQ.CURRVAL, USERS_USR_ID_SEQ.CURRVAL);
 
 
 
+
+
+CREATE TABLE MAH(
+    MAH_ID      NUMBER(10)      NOT NULL,
+    NAME        VARCHAR2(100)   NOT NULL,
+    COUNTRY     VARCHAR2(100)   NOT NULL,
+    
+    CONSTRAINT MAH_MAH_ID_PK PRIMARY KEY (MAH_ID)
+);
+
+COMMENT ON TABLE MAH IS '{O: "MY_TESTING", C: "podmiot odpowiedzialny"}';
+COMMENT ON COLUMN MAH.MAH_ID is 'klucz główny';
+COMMENT ON COLUMN MAH.Name is 'Nazwa podmiotu';
+COMMENT ON COLUMN MAH.Country is 'Kraj';
+
+CREATE SEQUENCE MAH_MAH_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+    
+CREATE OR REPLACE TRIGGER MAH_MAH_ID_TRG
+    BEFORE INSERT ON MAH
+    FOR EACH ROW
+    BEGIN
+        IF: NEW.MAH_ID IS NULL THEN
+        SELECT MAH_MAH_ID_SEQ.NEXTVAL INTO :NEW.MAH_ID FROM DUAL;
+        END IF;
+    END;
+/   
 
 
 
@@ -71,8 +92,9 @@ CREATE TABLE PROD(
     GTIN            NUMBER(13),
     PROD_STOCK      NUMBER(15,3) DEFAULT 0 NOT NULL CHECK(PROD_STOCK BETWEEN 0 AND 999999999),
     PROD_PRICE      NUMBER(15,3) DEFAULT 0 NOT NULL CHECK(PROD_PRICE BETWEEN 0 AND 999999999),
-
-    CONSTRAINT PROD_PROD_ID_PK PRIMARY KEY (PROD_ID)
+    
+    CONSTRAINT PROD_PROD_ID_PK PRIMARY KEY (PROD_ID),
+    CONSTRAINT PROD_MAH_MAH_ID_FK FOREIGN KEY (MAH_ID) REFERENCES MAH(MAH_ID)
 );
 
 COMMENT ON TABLE PROD IS '{O: "MY_TESTING", C: "Produkty"}';
@@ -88,11 +110,7 @@ COMMENT ON COLUMN PROD.GTIN IS 'Globalny numer jednostki handlowej';
 COMMENT ON COLUMN PROD.PROD_STOCK IS 'Stan magazynowy';
 COMMENT ON COLUMN PROD.PROD_PRICE IS 'Cena produktu';
 
-CREATE SEQUENCE PROD_PROD_ID_SEQ
-    START WITH 1
-    INCREMENT BY 1
-    NOCACHE
-    NOCYCLE;
+CREATE SEQUENCE PROD_PROD_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 
 CREATE OR REPLACE TRIGGER PROD_PROD_ID_TRG
     BEFORE INSERT ON PROD
@@ -130,11 +148,7 @@ COMMENT ON COLUMN CATP.ACTIVE IS 'Status';
 COMMENT ON COLUMN CATP.NAME IS 'Nazwa Kategorii';
 
 
-CREATE SEQUENCE CATP_CATP_ID_SEQ
-    START WITH 1
-    INCREMENT BY 1
-    NOCACHE
-    NOCYCLE;
+CREATE SEQUENCE CATP_CATP_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 
 CREATE OR REPLACE TRIGGER CATP_CATP_ID_TRG
     BEFORE INSERT ON CATP
@@ -174,11 +188,7 @@ COMMENT ON COLUMN CATP_PROD.CATP_PROD_ID IS 'klucz główny';
 COMMENT ON COLUMN CATP_PROD.CATP_ID IS 'klucz kategorii';
 COMMENT ON COLUMN CATP_PROD.PROD_ID IS 'klucz produktu';
     
-CREATE SEQUENCE CATP_PROD_CATP_PROD_ID_SEQ
-    START WITH 1
-    INCREMENT BY 1
-    NOCACHE
-    NOCYCLE;
+CREATE SEQUENCE CATP_PROD_CATP_PROD_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
     
 CREATE OR REPLACE TRIGGER CATP_PROD_CATP_PROD_ID_TRG
     BEFORE INSERT ON CATP_PROD
@@ -192,48 +202,7 @@ CREATE OR REPLACE TRIGGER CATP_PROD_CATP_PROD_ID_TRG
     
     
     
-    
-    
-    
-    
-    
-    
-CREATE TABLE MAH(
-    MAH_ID      NUMBER(10)      NOT NULL,
-    NAME        VARCHAR2(100)   NOT NULL,
-    COUNTRY     VARCHAR2(100)   NOT NULL,
-    
-    CONSTRAINT MAH_MAH_ID_PK PRIMARY KEY (MAH_ID)
-);
 
-COMMENT ON TABLE MAH IS '{O: "MY_TESTING", C: "podmiot odpowiedzialny"}';
-COMMENT ON COLUMN MAH.MAH_ID is 'klucz główny';
-COMMENT ON COLUMN MAH.Name is 'Nazwa podmiotu';
-COMMENT ON COLUMN MAH.Country is 'Kraj';
-
-CREATE SEQUENCE MAH_MAH_ID_SEQ
-    START WITH 1
-    INCREMENT BY 1
-    NOCACHE
-    NOCYCLE;
-    
-CREATE OR REPLACE TRIGGER MAH_MAH_ID_TRG
-    BEFORE INSERT ON MAH
-    FOR EACH ROW
-    BEGIN
-        IF: NEW.MAH_ID IS NULL THEN
-        SELECT MAH_MAH_ID_SEQ.NEXTVAL INTO :NEW.MAH_ID FROM DUAL;
-        END IF;
-    END;
-/   
-
-
-
-
---CONSTRAINT DO PROD - MAH
-ALTER TABLE PROD ADD(
-    CONSTRAINT PROD_MAH_MAH_ID_FK FOREIGN KEY (MAH_ID) REFERENCES MAH(MAH_ID)
-)
 
 --CONST COLUMNS FOR ALL
 ALTER TABLE USERS ADD(
@@ -418,8 +387,12 @@ END FUNCTION_4_F;
 
 
 
-
-CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(P_USR_ID NUMBER) AS
+--#####################################################################################################################
+--
+--              GŁÓWNA PROCEDURA
+--
+--#####################################################################################################################
+CREATE OR REPLACE PROCEDURE PROCEDURE_1_P AS
     CURSOR cur_source IS
         SELECT BLZ7_ID, KEAN, NAZW, POST, DAWK, OPAK, STOCK, PRICE, NPRD, PNZW, PKRJ
         FROM EXAMPLE_PRODUCT_MODEL;
@@ -460,26 +433,25 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(P_USR_ID NUMBER) AS
         DBMS_OUTPUT.PUT_LINE('v_category: ' || NVL(v_category_name, 'NULL'));
 
         -- Na poczatku sprawdzamy MAH, poniewaz PROD wymaga podania MAH_ID
-        BEGIN
+         BEGIN
             SELECT MAH_ID INTO v_mah_id 
             FROM MAH 
             WHERE NAME = rec.PNZW 
             FOR UPDATE NOWAIT;
             
+            -- Jeśli istnieje, aktualizujemy COUNTRY
             UPDATE MAH 
-                SET COUNTRY = NVL(rec.PKRJ, 'BRAK WPISU'),
-                    UUSR_ID = P_USR_ID,
-                    UPDATED_DT = SYSDATE
+                SET COUNTRY = NVL(rec.PKRJ, 'BRAK WPISU')
                 WHERE MAH_ID = v_mah_id;
         
         EXCEPTION
             WHEN NO_DATA_FOUND THEN
-                SELECT MAH_MAH_ID_SEQ.NEXTVAL INTO v_mah_id FROM DUAL;
-                
-                INSERT INTO MAH (MAH_ID, NAME, COUNTRY, CREATED_DT, UPDATED_DT, CUSR_ID, UUSR_ID)
-                VALUES (v_mah_id, rec.PNZW, NVL(rec.PKRJ, 'BRAK WPISU'), SYSDATE, SYSDATE, P_USR_ID, P_USR_ID);
+                -- Jeśli nie istnieje, wstawiamy nowy rekord i pobieramy ID
+                INSERT INTO MAH (MAH_ID, NAME, COUNTRY)
+                VALUES (MAH_MAH_ID_SEQ.NEXTVAL, rec.PNZW, NVL(rec.PKRJ, 'BRAK WPISU'))
+                RETURNING MAH_ID INTO v_mah_id;
         END;
-        
+        DBMS_OUTPUT.PUT_LINE('v_mah_id: ' || NVL(v_mah_id, 'NULL'));
         
         -- Sprawdzenie czy produkt juz istnieje po numerze GTIN
         BEGIN
@@ -495,17 +467,13 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(P_USR_ID NUMBER) AS
                     PROD_STRENGTH = v_dawk_clean,
                     PROD_PACKAGE = rec.OPAK,
                     PROD_STOCK = rec.STOCK,
-                    PROD_PRICE = rec.PRICE,
-                    UUSR_ID = P_USR_ID,
-                    UPDATED_DT = SYSDATE
+                    PROD_PRICE = rec.PRICE
                 WHERE PROD_ID = v_prod_id;
                 
             EXCEPTION
                 WHEN NO_DATA_FOUND THEN
-                    SELECT PROD_PROD_ID_SEQ.NEXTVAL INTO v_prod_id FROM DUAL;
-                    
-                    INSERT INTO PROD(PROD_ID, PROD_NAME, PROD_FORM, PROD_STRENGTH, PROD_PACKAGE, MAH_ID, BLZ7, GTIN, PROD_STOCK, PROD_PRICE, CREATED_DT, UPDATED_DT, CUSR_ID, UUSR_ID)
-                    VALUES (v_prod_id, rec.NAZW, rec.POST, rec.DAWK, rec.OPAK, v_mah_id, rec.BLZ7_ID, rec.KEAN, rec.STOCK, rec.PRICE, SYSDATE, SYSDATE, P_USR_ID, P_USR_ID);
+                    INSERT INTO PROD(PROD_NAME, PROD_FORM, PROD_STRENGTH, PROD_PACKAGE, MAH_ID, BLZ7, GTIN, PROD_STOCK, PROD_PRICE)
+                    VALUES (rec.NAZW, rec.POST, rec.DAWK, rec.OPAK, v_mah_id, rec.BLZ7_ID, rec.KEAN, rec.STOCK, rec.PRICE);
         END;
         
         -- sprawdzenie czy CATP juz istnieje
@@ -517,15 +485,15 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(P_USR_ID NUMBER) AS
                 
             EXCEPTION
                 WHEN NO_DATA_FOUND THEN
-                    SELECT CATP_CATP_ID_SEQ.NEXTVAL INTO v_catp_id FROM DUAL;
-                    INSERT INTO CATP(CATP_ID, NAME, CREATED_DT, UPDATED_DT, CUSR_ID, UUSR_ID)
-                    VALUES(v_catp_id, v_category_name, SYSDATE, SYSDATE, P_USR_ID, P_USR_ID);
+                    INSERT INTO CATP(NAME)
+                    VALUES(v_category_name)
+                    RETURNING CATP_ID INTO v_catp_id;
         END;
         
         -- sprawdzenie czy CATP_PROD juz istnieje
         BEGIN
-            INSERT INTO CATP_PROD (CATP_PROD_ID, CATP_ID, PROD_ID, CUSR_ID, UUSR_ID)
-            SELECT CATP_PROD_CATP_PROD_ID_SEQ.NEXTVAL, v_catp_id, v_prod_id, P_USR_ID, P_USR_ID FROM DUAL
+            INSERT INTO CATP_PROD (CATP_ID, PROD_ID)
+            SELECT v_catp_id, v_prod_id FROM DUAL
             WHERE NOT EXISTS(
             SELECT 1 FROM CATP_PROD WHERE CATP_ID = v_catp_id AND PROD_ID = v_prod_id);
         END;
@@ -534,48 +502,249 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(P_USR_ID NUMBER) AS
 END;
 /
 
-
+--#####################################################################################################################
+--
+--          TRIGGER 1 - trigger podczas wstawiania nowego rekordu
+--
+--#####################################################################################################################
 CREATE OR REPLACE TRIGGER TRIGGER_1_PROD_TRG
 BEFORE INSERT ON PROD
 FOR EACH ROW
+DECLARE
+    v_user_id NUMBER;
 BEGIN
+    -- Pobranie ID użytkownika na podstawie aktualnego użytkownika bazy danych
+    SELECT USR_ID INTO v_user_id
+    FROM USERS
+    WHERE NAME = USER
+    FETCH FIRST 1 ROW ONLY;  -- Dla bezpieczeństwa, jeśli zwróci wiele wierszy
+
     -- Ustawienie wartości timestamp
     :NEW.CREATED_DT := SYSDATE;
     :NEW.UPDATED_DT := SYSDATE;
 
-    -- Ustawienie użytkownika tworzącego rekord
-    :NEW.CUSR_ID := NVL(:NEW.CUSR_ID, USER);
-    :NEW.UUSR_ID := NVL(:NEW.UUSR_ID, USER);
+    -- Automatyczne przypisanie ID użytkownika
+    :NEW.CUSR_ID := v_user_id;
+    :NEW.UUSR_ID := v_user_id;
 
     -- Ustawienie nowej wartości klucza głównego, jeśli jest NULL
-   IF :NEW.PROD_ID IS NULL THEN
+    IF :NEW.PROD_ID IS NULL THEN
         :NEW.PROD_ID := PROD_PROD_ID_SEQ.NEXTVAL;
     END IF;
 END;
 /
 
-
 CREATE OR REPLACE TRIGGER TRIGGER_1_MAH_TRG
 BEFORE INSERT ON MAH
 FOR EACH ROW
+DECLARE
+    v_user_id NUMBER;
 BEGIN
+    -- Pobranie ID użytkownika na podstawie aktualnego użytkownika bazy danych
+    SELECT USR_ID INTO v_user_id
+    FROM USERS
+    WHERE NAME = USER
+    FETCH FIRST 1 ROW ONLY;  -- Dla bezpieczeństwa, jeśli zwróci wiele wierszy
+
     -- Ustawienie wartości timestamp
     :NEW.CREATED_DT := SYSDATE;
     :NEW.UPDATED_DT := SYSDATE;
 
-    -- Ustawienie użytkownika tworzącego rekord
-    :NEW.CUSR_ID := NVL(:NEW.CUSR_ID, 1);
-    :NEW.UUSR_ID := NVL(:NEW.UUSR_ID, 1);
+    -- Automatyczne przypisanie ID użytkownika
+    :NEW.CUSR_ID := v_user_id;
+    :NEW.UUSR_ID := v_user_id;
 
     -- Ustawienie nowej wartości klucza głównego, jeśli jest NULL
-   IF :NEW.MAH_ID IS NULL THEN
+    IF :NEW.MAH_ID IS NULL THEN
         :NEW.MAH_ID := MAH_MAH_ID_SEQ.NEXTVAL;
     END IF;
 END;
 /
 
+CREATE OR REPLACE TRIGGER TRIGGER_1_USERS_TRG
+BEFORE INSERT ON USERS
+FOR EACH ROW
+DECLARE
+    v_user_id NUMBER;
+BEGIN
+    -- Pobranie ID użytkownika na podstawie aktualnego użytkownika bazy danych
+    SELECT USR_ID INTO v_user_id
+    FROM USERS
+    WHERE NAME = USER
+    FETCH FIRST 1 ROW ONLY;  -- Dla bezpieczeństwa, jeśli zwróci wiele wierszy
+
+    -- Ustawienie wartości timestamp
+    :NEW.CREATED_DT := SYSDATE;
+    :NEW.UPDATED_DT := SYSDATE;
+
+    -- Automatyczne przypisanie ID użytkownika
+    :NEW.CUSR_ID := v_user_id;
+    :NEW.UUSR_ID := v_user_id;
+
+    -- Ustawienie nowej wartości klucza głównego, jeśli jest NULL
+    IF :NEW.USR_ID IS NULL THEN
+        :NEW.USR_ID := USERS_USR_ID_SEQ.NEXTVAL;
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRIGGER_1_CATP_TRG
+BEFORE INSERT ON CATP
+FOR EACH ROW
+DECLARE
+    v_user_id NUMBER;
+BEGIN
+    -- Pobranie ID użytkownika na podstawie aktualnego użytkownika bazy danych
+    SELECT USR_ID INTO v_user_id
+    FROM USERS
+    WHERE NAME = USER
+    FETCH FIRST 1 ROW ONLY;  -- Dla bezpieczeństwa, jeśli zwróci wiele wierszy
+
+    -- Ustawienie wartości timestamp
+    :NEW.CREATED_DT := SYSDATE;
+    :NEW.UPDATED_DT := SYSDATE;
+
+    -- Automatyczne przypisanie ID użytkownika
+    :NEW.CUSR_ID := v_user_id;
+    :NEW.UUSR_ID := v_user_id;
+
+    -- Ustawienie nowej wartości klucza głównego, jeśli jest NULL
+    IF :NEW.CATP_ID IS NULL THEN
+        :NEW.CATP_ID := CATP_CATP_ID_SEQ.NEXTVAL;
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRIGGER_1_CATP_PROD_TRG
+BEFORE INSERT ON CATP_PROD
+FOR EACH ROW
+DECLARE
+    v_user_id NUMBER;
+BEGIN
+    -- Pobranie ID użytkownika na podstawie aktualnego użytkownika bazy danych
+    SELECT USR_ID INTO v_user_id
+    FROM USERS
+    WHERE NAME = USER
+    FETCH FIRST 1 ROW ONLY;  -- Dla bezpieczeństwa, jeśli zwróci wiele wierszy
+
+    -- Ustawienie wartości timestamp
+    :NEW.CREATED_DT := SYSDATE;
+    :NEW.UPDATED_DT := SYSDATE;
+
+    -- Automatyczne przypisanie ID użytkownika
+    :NEW.CUSR_ID := v_user_id;
+    :NEW.UUSR_ID := v_user_id;
+
+    -- Ustawienie nowej wartości klucza głównego, jeśli jest NULL
+    IF :NEW.CATP_PROD_ID IS NULL THEN
+        :NEW.CATP_PROD_ID := CATP_PROD_CATP_PROD_ID_SEQ.NEXTVAL;
+    END IF;
+END;
+/
+--#####################################################################################################################
+--
+--          TRIGGER 2 - trigger podczas aktualizacji rekordu
+--
+--#####################################################################################################################
+CREATE OR REPLACE TRIGGER TRIGGER_2_PROD_TRG
+BEFORE UPDATE ON PROD
+FOR EACH ROW
+DECLARE
+    v_user_id NUMBER;
+BEGIN
+    -- Pobranie ID użytkownika na podstawie aktualnego użytkownika bazy danych
+    SELECT USR_ID INTO v_user_id
+    FROM USERS
+    WHERE NAME = USER
+    FETCH FIRST 1 ROW ONLY;  -- Dla bezpieczeństwa, jeśli zwróci wiele wierszy
+
+    -- Ustawienie wartości timestamp
+    :NEW.UPDATED_DT := SYSDATE;
+    -- Automatyczne przypisanie ID użytkownika
+    :NEW.UUSR_ID := v_user_id;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRIGGER_2_MAH_TRG
+BEFORE UPDATE ON MAH
+FOR EACH ROW
+DECLARE
+    v_user_id NUMBER;
+BEGIN
+    -- Pobranie ID użytkownika na podstawie aktualnego użytkownika bazy danych
+    SELECT USR_ID INTO v_user_id
+    FROM USERS
+    WHERE NAME = USER
+    FETCH FIRST 1 ROW ONLY;  -- Dla bezpieczeństwa, jeśli zwróci wiele wierszy
+
+    -- Ustawienie wartości timestamp
+    :NEW.UPDATED_DT := SYSDATE;
+    -- Automatyczne przypisanie ID użytkownika
+    :NEW.UUSR_ID := v_user_id;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRIGGER_2_USERS_TRG
+BEFORE UPDATE ON USERS
+FOR EACH ROW
+DECLARE
+    v_user_id NUMBER;
+BEGIN
+    -- Pobranie ID użytkownika na podstawie aktualnego użytkownika bazy danych
+    SELECT USR_ID INTO v_user_id
+    FROM USERS
+    WHERE NAME = USER
+    FETCH FIRST 1 ROW ONLY;  -- Dla bezpieczeństwa, jeśli zwróci wiele wierszy
+
+    -- Ustawienie wartości timestamp
+    :NEW.UPDATED_DT := SYSDATE;
+    -- Automatyczne przypisanie ID użytkownika
+    :NEW.UUSR_ID := v_user_id;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRIGGER_2_CATP_TRG
+BEFORE UPDATE ON CATP
+FOR EACH ROW
+DECLARE
+    v_user_id NUMBER;
+BEGIN
+    -- Pobranie ID użytkownika na podstawie aktualnego użytkownika bazy danych
+    SELECT USR_ID INTO v_user_id
+    FROM USERS
+    WHERE NAME = USER
+    FETCH FIRST 1 ROW ONLY;  -- Dla bezpieczeństwa, jeśli zwróci wiele wierszy
+
+    -- Ustawienie wartości timestamp
+    :NEW.UPDATED_DT := SYSDATE;
+    -- Automatyczne przypisanie ID użytkownika
+    :NEW.UUSR_ID := v_user_id;
+END;
+/
+
+CREATE OR REPLACE TRIGGER TRIGGER_2_CATP_PROD_TRG
+BEFORE UPDATE ON CATP_PROD
+FOR EACH ROW
+DECLARE
+    v_user_id NUMBER;
+BEGIN
+    -- Pobranie ID użytkownika na podstawie aktualnego użytkownika bazy danych
+    SELECT USR_ID INTO v_user_id
+    FROM USERS
+    WHERE NAME = USER
+    FETCH FIRST 1 ROW ONLY;  -- Dla bezpieczeństwa, jeśli zwróci wiele wierszy
+
+    -- Ustawienie wartości timestamp
+    :NEW.UPDATED_DT := SYSDATE;
+    -- Automatyczne przypisanie ID użytkownika
+    :NEW.UUSR_ID := v_user_id;
+END;
+/
+--#####################################################################################################################
+
+
 -- SELECT USER FROM DUAL;
 -- SELECT MAH_MAH_ID_SEQ.NEXTVAL FROM DUAL;
 -- INSERT INTO MAH(NAME, COUNTRY) VALUES ('TEST INC.', 'PL');
 
-EXEC PROCEDURE_1_P(2);
+EXEC PROCEDURE_1_P();
