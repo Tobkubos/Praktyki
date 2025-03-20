@@ -447,8 +447,8 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P AS
         EXCEPTION
             WHEN NO_DATA_FOUND THEN
                 -- Jeśli nie istnieje, wstawiamy nowy rekord i pobieramy ID
-                INSERT INTO MAH (MAH_ID, NAME, COUNTRY)
-                VALUES (MAH_MAH_ID_SEQ.NEXTVAL, rec.PNZW, NVL(rec.PKRJ, 'BRAK WPISU'))
+                INSERT INTO MAH (NAME, COUNTRY)
+                VALUES (rec.PNZW, NVL(rec.PKRJ, 'BRAK WPISU'))
                 RETURNING MAH_ID INTO v_mah_id;
         END;
         DBMS_OUTPUT.PUT_LINE('v_mah_id: ' || NVL(v_mah_id, 'NULL'));
