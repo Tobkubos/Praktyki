@@ -1,22 +1,19 @@
 --system tobiasz
 --MY_TESTING MY_TESTING
 SET SERVEROUTPUT ON;
-/*
-TRUNCATE TABLE CATP_PROD;
-TRUNCATE TABLE PROD;
-TRUNCATE TABLE CATP;
-TRUNCATE TABLE MAH;
-TRUNCATE TABLE USERS;
+
+DROP TABLE CATP_PROD;
+DROP TABLE PROD;
+DROP TABLE CATP;
+DROP TABLE MAH;
+DROP TABLE USERS;
 DROP SEQUENCE USERS_USR_ID_SEQ;
 DROP SEQUENCE PROD_PROD_ID_SEQ;
 DROP SEQUENCE CATP_CATP_ID_SEQ;
 DROP SEQUENCE CATP_PROD_CATP_PROD_ID_SEQ;
 DROP SEQUENCE MAH_MAH_ID_SEQ;
-
-
-*/
-ALTER TABLE PROD
-MODIFY PROD_NAME VARCHAR2(120);
+DROP FUNCTION FUNCTION_3_F;
+DROP FUNCTION FUNCTION_4_F;
 
 CREATE TABLE USERS(
     USR_ID      NUMBER(10),
@@ -44,7 +41,8 @@ CREATE OR REPLACE TRIGGER USERS_USR_ID_TRG
         END IF;
     END;
 /
---INSERT INTO USERS (USR_ID, NAME, SURNAME, EMAIL, CUSR_ID, UUSR_ID) VALUES (USERS_USR_ID_SEQ.NEXTVAL, 'MY_TESTING', 'MY_TESTING', 'my_testing@test.com', USERS_USR_ID_SEQ.CURRVAL, USERS_USR_ID_SEQ.CURRVAL);
+
+INSERT INTO USERS (NAME, SURNAME, EMAIL) VALUES ('MY_TESTING', 'MY_TESTING', 'my_testing@test.com');
 
 
 
@@ -83,18 +81,19 @@ CREATE OR REPLACE TRIGGER MAH_MAH_ID_TRG
 CREATE TABLE PROD(
     PROD_ID         NUMBER(10),
     STATUS          CHAR(1)         DEFAULT 'I' NOT NULL CHECK(STATUS IN ('A', 'I')),
-    PROD_NAME       VARCHAR(80)     NOT NULL,
-    PROD_FORM       VARCHAR(20),
+    PROD_NAME       VARCHAR(120)    NOT NULL,
+    PROD_FORM       VARCHAR(40),
     PROD_STRENGTH   VARCHAR2(20),
     PROD_PACKAGE    VARCHAR2(40),
     MAH_ID          NUMBER(10)      NOT NULL,
     BLZ7            NUMBER(10),
-    GTIN            NUMBER(13),
+    GTIN            NUMBER(14),
     PROD_STOCK      NUMBER(15,3) DEFAULT 0 NOT NULL CHECK(PROD_STOCK BETWEEN 0 AND 999999999),
     PROD_PRICE      NUMBER(15,3) DEFAULT 0 NOT NULL CHECK(PROD_PRICE BETWEEN 0 AND 999999999),
     
     CONSTRAINT PROD_PROD_ID_PK PRIMARY KEY (PROD_ID),
-    CONSTRAINT PROD_MAH_MAH_ID_FK FOREIGN KEY (MAH_ID) REFERENCES MAH(MAH_ID)
+    CONSTRAINT PROD_MAH_MAH_ID_FK FOREIGN KEY (MAH_ID) REFERENCES MAH(MAH_ID),
+    CONSTRAINT PROD_BLZ7_GTIN_UK UNIQUE (BLZ7, GTIN)
 );
 
 COMMENT ON TABLE PROD IS '{O: "MY_TESTING", C: "Produkty"}';
@@ -208,11 +207,11 @@ CREATE OR REPLACE TRIGGER CATP_PROD_CATP_PROD_ID_TRG
 ALTER TABLE USERS ADD(
     CREATED_DT DATE DEFAULT SYSDATE NOT NULL,
     UPDATED_DT DATE DEFAULT SYSDATE NOT NULL,
-    CUSR_ID NUMBER(10) NOT NULL,
-    UUSR_ID NUMBER(10) NOT NULL,
+    CUSR_ID NUMBER(10),
+    UUSR_ID NUMBER(10)
     
-    CONSTRAINT USERS_CUSR_ID_USR_ID_FK FOREIGN KEY (CUSR_ID) REFERENCES USERS(USR_ID),
-    CONSTRAINT USERS_UUSR_ID_USR_ID_FK FOREIGN KEY (UUSR_ID) REFERENCES USERS(USR_ID)
+    --CONSTRAINT USERS_CUSR_ID_USR_ID_FK FOREIGN KEY (CUSR_ID) REFERENCES USERS(USR_ID),
+    --CONSTRAINT USERS_UUSR_ID_USR_ID_FK FOREIGN KEY (UUSR_ID) REFERENCES USERS(USR_ID)
 );
 COMMENT ON COLUMN USERS.CREATED_DT IS 'Data stworzenia';
 COMMENT ON COLUMN USERS.UPDATED_DT IS 'Data aktualizacji';
@@ -392,10 +391,11 @@ END FUNCTION_4_F;
 --              GŁÓWNA PROCEDURA
 --
 --#####################################################################################################################
-CREATE OR REPLACE PROCEDURE PROCEDURE_1_P AS
+CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(p_usr_id NUMBER) AS
     CURSOR cur_source IS
         SELECT BLZ7_ID, KEAN, NAZW, POST, DAWK, OPAK, STOCK, PRICE, NPRD, PNZW, PKRJ
         FROM EXAMPLE_PRODUCT_MODEL;
+    
     
     v_post_clean VARCHAR2(100);
     v_dawk_clean VARCHAR2(100);
@@ -406,7 +406,8 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P AS
     v_catp_id NUMBER;
     v_catp_prod_id NUMBER;
     
-        
+       
+       
         FUNCTION FUNCTION_2_F(p_post VARCHAR2) RETURN VARCHAR2 IS
             v_category VARCHAR2(100);
         BEGIN
@@ -418,10 +419,27 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P AS
                 RETURN 'POSTAC: NIEZNANA';
             END IF;
         END FUNCTION_2_F;
-
-
+        
+        
     BEGIN
+    DBMS_OUTPUT.PUT_LINE('WTF');
     FOR rec IN cur_source LOOP
+    
+        DBMS_OUTPUT.PUT_LINE('--------------------');
+        DBMS_OUTPUT.PUT_LINE('BLZ7_ID: ' || rec.BLZ7_ID);
+        DBMS_OUTPUT.PUT_LINE('KEAN: ' || rec.KEAN);
+        DBMS_OUTPUT.PUT_LINE('NAZW: ' || rec.NAZW);
+        DBMS_OUTPUT.PUT_LINE('POST: ' || rec.POST);
+        DBMS_OUTPUT.PUT_LINE('DAWK: ' || rec.DAWK);
+        DBMS_OUTPUT.PUT_LINE('OPAK: ' || rec.OPAK);
+        DBMS_OUTPUT.PUT_LINE('STOCK: ' || rec.STOCK);
+        DBMS_OUTPUT.PUT_LINE('PRICE: ' || rec.PRICE);
+        DBMS_OUTPUT.PUT_LINE('NPRD: ' || rec.NPRD);
+        DBMS_OUTPUT.PUT_LINE('PNZW: ' || rec.PNZW);
+        DBMS_OUTPUT.PUT_LINE('PKRJ: ' || rec.PKRJ);
+        DBMS_OUTPUT.PUT_LINE('--------------------');
+        
+        
         -- 1. myslniki i spacje
         DBMS_OUTPUT.PUT_LINE('rec.POST: ' || NVL(rec.POST, 'NULL'));
         v_post_clean := FUNCTION_1_F(rec.POST);
@@ -431,34 +449,27 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P AS
         v_category_name := FUNCTION_2_F(v_post_clean);
  
         DBMS_OUTPUT.PUT_LINE('v_category: ' || NVL(v_category_name, 'NULL'));
-
         -- Na poczatku sprawdzamy MAH, poniewaz PROD wymaga podania MAH_ID
          BEGIN
             SELECT MAH_ID INTO v_mah_id 
             FROM MAH 
-            WHERE NAME = rec.PNZW 
-            FOR UPDATE NOWAIT;
-            
-            -- Jeśli istnieje, aktualizujemy COUNTRY
-            UPDATE MAH 
-                SET COUNTRY = NVL(rec.PKRJ, 'BRAK WPISU')
-                WHERE MAH_ID = v_mah_id;
-        
+            WHERE NAME = rec.PNZW;
+         
         EXCEPTION
             WHEN NO_DATA_FOUND THEN
-                -- Jeśli nie istnieje, wstawiamy nowy rekord i pobieramy ID
+                --wstawiamy nowy rekord i pobieramy ID
                 INSERT INTO MAH (NAME, COUNTRY)
                 VALUES (rec.PNZW, NVL(rec.PKRJ, 'BRAK WPISU'))
                 RETURNING MAH_ID INTO v_mah_id;
         END;
-        DBMS_OUTPUT.PUT_LINE('v_mah_id: ' || NVL(v_mah_id, 'NULL'));
         
-        -- Sprawdzenie czy produkt juz istnieje po numerze GTIN
         BEGIN
+            -- Sprawdź czy istnieje produkt z takim samym BLZ7 i GTIN
             SELECT PROD_ID INTO v_prod_id
-                FROM PROD
-                WHERE GTIN = rec.KEAN
-                FOR UPDATE NOWAIT;
+            FROM PROD
+            WHERE BLZ7 = rec.BLZ7_ID AND 
+                  (GTIN = rec.KEAN OR (GTIN IS NULL AND rec.KEAN IS NULL))
+            FOR UPDATE NOWAIT;
             
             UPDATE PROD
                 SET 
@@ -489,7 +500,7 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P AS
                     VALUES(v_category_name)
                     RETURNING CATP_ID INTO v_catp_id;
         END;
-        
+        /*
         -- sprawdzenie czy CATP_PROD juz istnieje
         BEGIN
             INSERT INTO CATP_PROD (CATP_ID, PROD_ID)
@@ -497,7 +508,7 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P AS
             WHERE NOT EXISTS(
             SELECT 1 FROM CATP_PROD WHERE CATP_ID = v_catp_id AND PROD_ID = v_prod_id);
         END;
-        
+        */     
     END LOOP;
 END;
 /
@@ -665,25 +676,6 @@ BEGIN
 END;
 /
 
-CREATE OR REPLACE TRIGGER TRIGGER_2_MAH_TRG
-BEFORE UPDATE ON MAH
-FOR EACH ROW
-DECLARE
-    v_user_id NUMBER;
-BEGIN
-    -- Pobranie ID użytkownika na podstawie aktualnego użytkownika bazy danych
-    SELECT USR_ID INTO v_user_id
-    FROM USERS
-    WHERE NAME = USER
-    FETCH FIRST 1 ROW ONLY;  -- Dla bezpieczeństwa, jeśli zwróci wiele wierszy
-
-    -- Ustawienie wartości timestamp
-    :NEW.UPDATED_DT := SYSDATE;
-    -- Automatyczne przypisanie ID użytkownika
-    :NEW.UUSR_ID := v_user_id;
-END;
-/
-
 CREATE OR REPLACE TRIGGER TRIGGER_2_USERS_TRG
 BEFORE UPDATE ON USERS
 FOR EACH ROW
@@ -747,4 +739,10 @@ END;
 -- SELECT MAH_MAH_ID_SEQ.NEXTVAL FROM DUAL;
 -- INSERT INTO MAH(NAME, COUNTRY) VALUES ('TEST INC.', 'PL');
 
-EXEC PROCEDURE_1_P();
+EXEC PROCEDURE_1_P(1);
+
+SELECT BLZ7_ID, KEAN, NAZW, POST, DAWK, OPAK, STOCK, PRICE, NPRD, PNZW, PKRJ
+FROM EXAMPLE_PRODUCT_MODEL
+FETCH FIRST 10 ROW ONLY;
+
+select count(*) from PROD;
