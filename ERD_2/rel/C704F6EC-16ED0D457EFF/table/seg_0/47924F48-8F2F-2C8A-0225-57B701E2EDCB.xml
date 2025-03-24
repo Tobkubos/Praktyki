@@ -1,0 +1,148 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="47924F48-8F2F-2C8A-0225-57B701E2EDCB" schemaObject="6BE88EC1-FF79-1234-D82A-8B279DC53BAC" name="CATP">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>CATP</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:23 UTC</createdTime>
+<commentInRDBMS><![CDATA[{O: "MY_TESTING", C: "Kategorie produktów"}]]></commentInRDBMS>
+<ownerDesignName>ERD_2</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="44740458-D690-1CD1-4726-8E9F78F2E876" name="CATP_CATP_ID_PK">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>CATP_CATP_ID_PK</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:23 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<pk>true</pk>
+<indexExpression>CATP_ID</indexExpression>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+<ind_PK_UK id="8469904A-96A1-777E-31E0-825BBCE99907" name="CATP_NAME_UK">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>CATP_NAME_UK</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:23 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<indexExpression>NAME</indexExpression>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+<ind_PK_UK id="8D45E158-2219-4275-3B25-E88B7A79D398" schemaObject="6BE88EC1-FF79-1234-D82A-8B279DC53BAC" name="CATP_CATP_ID_PK">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>CATP_CATP_ID_PK</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:23 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<indexExpression>CATP_ID</indexExpression>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+<ind_PK_UK id="68481DE7-35E2-693C-C64E-2BD1B736F3FF" schemaObject="6BE88EC1-FF79-1234-D82A-8B279DC53BAC" name="CATP_NAME_UK">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>CATP_NAME_UK</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:23 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<indexExpression>NAME</indexExpression>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+<ind_PK_UK id="CCE77B58-3890-0ECE-686E-0E01213FE37D" name="CATP_CUSR_ID_USR_ID_FK">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:23 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+<ind_PK_UK id="921DCD82-7C42-F75C-59A2-DC4C790DF91C" name="CATP_UUSR_ID_USR_ID_FK">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:23 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
+</indexes>
+<tableCheckConstraints itemClass="oracle.dbtools.crest.model.design.constraint.TableLevelConstraint">
+<tableCheckConstraint name="SYS_C008591" directorySegmentName="seg_0" id="767A2439-237C-530D-F959-935E42F13693">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>SYS_C008591</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:23 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<rule><![CDATA["CATP_ID" IS NOT NULL]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="SYS_C008592" directorySegmentName="seg_0" id="0A4C52B4-0082-E8F1-5781-171039B3B6C1">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>SYS_C008592</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:23 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<rule><![CDATA["ACTIVE" IS NOT NULL]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="SYS_C008593" directorySegmentName="seg_0" id="B6A7CD91-ADA8-76B9-06A2-DA88ED887FFD">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>SYS_C008593</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:23 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<rule><![CDATA["NAME" IS NOT NULL]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="SYS_C008594" directorySegmentName="seg_0" id="F150621F-4149-FCE8-0858-ED5EA9C0EDD2">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>SYS_C008594</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:23 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<rule><![CDATA[ACTIVE IN('Y','N')]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="SYS_C008612" directorySegmentName="seg_0" id="90F53B6E-8426-E0CF-67B7-0575C383929A">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>SYS_C008612</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:23 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<rule><![CDATA["CREATED_DT" IS NOT NULL]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="SYS_C008613" directorySegmentName="seg_0" id="BD019DEE-0279-78B0-8974-DC65D4F95BD3">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>SYS_C008613</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:23 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<rule><![CDATA["UPDATED_DT" IS NOT NULL]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="SYS_C008614" directorySegmentName="seg_0" id="C03E89D9-8404-FAED-24EE-4243C98BA917">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>SYS_C008614</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:23 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<rule><![CDATA["CUSR_ID" IS NOT NULL]]></rule>
+</tableCheckConstraint>
+<tableCheckConstraint name="SYS_C008615" directorySegmentName="seg_0" id="9BFC9537-05BF-F61E-D8FE-8AD3F639BA7A">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>SYS_C008615</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:23 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<rule><![CDATA["UUSR_ID" IS NOT NULL]]></rule>
+</tableCheckConstraint>
+</tableCheckConstraints>
+</Table>

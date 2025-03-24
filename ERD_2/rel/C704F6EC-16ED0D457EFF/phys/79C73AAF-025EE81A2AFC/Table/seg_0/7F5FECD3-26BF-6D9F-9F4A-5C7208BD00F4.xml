@@ -1,0 +1,65 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v12c.TableProxyOraclev12c" name="USERS" directorySegmentName="seg_0" id="7F5FECD3-26BF-6D9F-9F4A-5C7208BD00F4">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:00 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<schemaObject>6BE88EC1-FF79-1234-D82A-8B279DC53BAC</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>F407B4AA-3BC1-6783-8DB1-66B4F784B720</segment>
+<tableSpace>D8D095A8-3C84-92AA-55DF-530F825E3951</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<inMemory>NO</inMemory>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="USERS_USR_ID_PK" id="B1A8C90A-1ADC-27A6-9F7E-746D20A11E53">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:00 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<schemaObject>6BE88EC1-FF79-1234-D82A-8B279DC53BAC</schemaObject>
+<segment>ADF24987-3FF8-4DC3-D6F2-03A5615950DE</segment>
+<tableSpace>D8D095A8-3C84-92AA-55DF-530F825E3951</tableSpace>
+</IndexProxy>
+</indexProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="USERS_USR_ID_PK" id="E4D6012C-5DC7-22FD-CEB5-6C15F6DBEE37">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:00 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<segment>ADF24987-3FF8-4DC3-D6F2-03A5615950DE</segment>
+<tableSpace>D8D095A8-3C84-92AA-55DF-530F825E3951</tableSpace>
+<existingIndex>B1A8C90A-1ADC-27A6-9F7E-746D20A11E53</existingIndex>
+<indexSegment>ADF24987-3FF8-4DC3-D6F2-03A5615950DE</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+<tableCheckConstraints itemClass="oracle.dbtools.crest.model.design.storage.oracle.TableCheckConstraintOracle">
+<TableCheckConstraint name="SYS_C008604" id="0445C09C-5529-9B1E-5607-4921D9D43994">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:01 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008605" id="0D45A037-6443-2EFF-51C1-9B166517016F">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:01 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008573" id="6E94B410-E612-9442-E91F-BF92CD3E70FF">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:01 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008574" id="9EE09D13-619A-B146-1B87-03D6C000CC77">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:01 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+</TableCheckConstraint>
+<TableCheckConstraint name="SYS_C008572" id="BE9FE791-EB16-9EE5-1E00-0FEF4124DEE3">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:01 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+</TableCheckConstraint>
+</tableCheckConstraints>
+</TableProxyOraclev12c>

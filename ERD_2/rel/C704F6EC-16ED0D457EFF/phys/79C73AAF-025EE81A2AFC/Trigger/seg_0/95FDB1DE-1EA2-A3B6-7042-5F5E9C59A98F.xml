@@ -1,0 +1,36 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="TRIGGER_1_PROD_TRG" directorySegmentName="seg_0" id="95FDB1DE-1EA2-A3B6-7042-5F5E9C59A98F">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>TRIGGER_1_PROD_TRG</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-24 17:48:13 UTC</createdTime>
+<ownerDesignName>ERD_2</ownerDesignName>
+<actions>INSERT</actions>
+<body><![CDATA[DECLARE
+    v_user_id NUMBER;
+BEGIN
+    -- Pobranie ID użytkownika na podstawie aktualnego użytkownika bazy danych
+    SELECT USR_ID INTO v_user_id
+    FROM USERS
+    WHERE NAME = USER
+    FETCH FIRST 1 ROW ONLY;  -- Dla bezpieczeństwa, jeśli zwróci wiele wierszy
+
+    -- Ustawienie wartości timestamp
+    :NEW.CREATED_DT := SYSDATE;
+    :NEW.UPDATED_DT := SYSDATE;
+
+    -- Automatyczne przypisanie ID użytkownika
+    :NEW.CUSR_ID := v_user_id;
+    :NEW.UUSR_ID := v_user_id;
+
+    -- Ustawienie nowej wartości klucza głównego, jeśli jest NULL
+    IF :NEW.PROD_ID IS NULL THEN
+        :NEW.PROD_ID := PROD_PROD_ID_SEQ.NEXTVAL;
+    END IF;
+END;
+]]></body>
+<triggerTime>BEFORE</triggerTime>
+<owner>D6D67CB7-0B52-0DD5-92A3-565F77335318</owner>
+<table>8CA37C30-29A5-5126-4C07-10A802C9EB31</table>
+</TriggerOraclev10g>

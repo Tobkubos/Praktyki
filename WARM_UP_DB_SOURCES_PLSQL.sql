@@ -301,30 +301,13 @@ END;
 /
 
 CREATE OR REPLACE TRIGGER TRIGGER_1_USERS_TRG
-BEFORE INSERT ON USERS
-FOR EACH ROW
-DECLARE
-    v_user_id NUMBER;
-BEGIN
-    -- Pobranie ID użytkownika na podstawie aktualnego użytkownika bazy danych
-    SELECT USR_ID INTO v_user_id
-    FROM USERS
-    WHERE NAME = USER
-    FETCH FIRST 1 ROW ONLY;  -- Dla bezpieczeństwa, jeśli zwróci wiele wierszy
-
-    -- Ustawienie wartości timestamp
-    :NEW.CREATED_DT := SYSDATE;
-    :NEW.UPDATED_DT := SYSDATE;
-
-    -- Automatyczne przypisanie ID użytkownika
-    :NEW.CUSR_ID := v_user_id;
-    :NEW.UUSR_ID := v_user_id;
-
-    -- Ustawienie nowej wartości klucza głównego, jeśli jest NULL
-    IF :NEW.USR_ID IS NULL THEN
-        :NEW.USR_ID := USERS_USR_ID_SEQ.NEXTVAL;
-    END IF;
-END;
+    BEFORE INSERT ON USERS
+    FOR EACH ROW
+    BEGIN
+        IF: NEW.USR_ID IS NULL THEN
+        SELECT USERS_USR_ID_SEQ.NEXTVAL INTO :NEW.USR_ID FROM DUAL;
+        END IF;
+    END;
 /
 
 CREATE OR REPLACE TRIGGER TRIGGER_1_CATP_TRG
