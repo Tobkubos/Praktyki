@@ -128,7 +128,7 @@ END FUNCTION_4_F;
 --#####################################################################################################################
 CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(p_usr_id NUMBER) AS
     CURSOR cur_source IS
-        SELECT BLZ7_ID, KEAN, NAZW, POST, DAWK, OPAK, STOCK, PRICE, NPRD, PNZW, PKRJ
+        SELECT PRID, BLZ7_ID, KEAN, NAZW, POST, DAWK, OPAK, STOCK, PRICE, NPRD, PNZW, PKRJ
         FROM EXAMPLE_PRODUCT_MODEL
         ORDER BY PRID;
     
@@ -196,11 +196,10 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(p_usr_id NUMBER) AS
         END;
         
         BEGIN
-            -- Sprawdź czy istnieje produkt z takim samym BLZ7 i GTIN
+            -- Sprawdź czy istnieje produkt
             SELECT PROD_ID INTO v_prod_id
             FROM PROD
-            WHERE BLZ7 = rec.BLZ7_ID AND 
-                  (GTIN = rec.KEAN OR (GTIN IS NULL AND rec.KEAN IS NULL))
+            WHERE PROD_ID = rec.PRID
             FOR UPDATE NOWAIT;
             
             UPDATE PROD
@@ -471,28 +470,60 @@ FROM PROD
 JOIN MAH ON PROD.MAH_ID = MAH.MAH_ID
 WITH READ ONLY;
 --#####################################################################################################################
+--
+-- PACKAGE DO USTAWIANIA ZMIENNEJ GLOBALNEJ gUSER_ID
+--
+--#####################################################################################################################
+
+CREATE OR REPLACE PACKAGE PACKAGE_1_PKG AS
+    -- Zmienna globalna
+    gUSER_ID NUMBER;
+
+    -- Procedura ustawiająca wartość zmiennej globalnej
+    PROCEDURE SET_USER_ID(p_usr_id NUMBER);
+
+    -- Funkcja do odczytu wartości zmiennej globalnej
+    FUNCTION GET_USER_ID RETURN NUMBER;
+
+    -- Procedura do uzupełniania CUSR_ID i UUSR_ID
+    PROCEDURE UPDATE_USER_IDS(p_usr_id NUMBER);
+    
+END PACKAGE_1_PKG;
+/
+
+CREATE OR REPLACE PACKAGE BODY PACKAGE_1_PKG AS
+
+    -- Procedura ustawiająca wartość zmiennej globalnej
+    PROCEDURE SET_USER_ID(p_usr_id NUMBER) IS
+    BEGIN
+        gUSER_ID := p_usr_id;
+    END SET_USER_ID;
+
+    -- Funkcja do odczytu wartości zmiennej globalnej
+    FUNCTION GET_USER_ID RETURN NUMBER IS
+    BEGIN
+        RETURN gUSER_ID;
+    END GET_USER_ID;
+
+    -- Procedura do uzupełniania CUSR_ID i UUSR_ID
+    PROCEDURE UPDATE_USER_IDS(p_usr_id NUMBER) IS
+    BEGIN
+        UPDATE USERS
+        SET CUSR_ID = p_usr_id, 
+            UUSR_ID = p_usr_id
+        WHERE USR_ID = p_usr_id;
+    END UPDATE_USER_IDS;
+
+END PACKAGE_1_PKG;
+/
 
 
---INSERT INTO USERS (NAME, SURNAME, EMAIL) VALUES ('MY_TESTING', 'MY_TESTING', 'my_testing@test.com');
+--#####################################################################################################################
+INSERT INTO USERS (NAME, SURNAME, EMAIL) VALUES ('MY_TESTING', 'MY_TESTING', 'my_testing@test.com');
 EXEC PROCEDURE_1_P(1);
 --SELECT * from VIEW_2_V;
 --SELECT * from VIEW_1_V;
-
-
-SELECT * 
-FROM EXAMPLE_PRODUCT_MODEL 
-WHERE BLZ7_ID IN (
-    SELECT BLZ7_ID 
-    FROM EXAMPLE_PRODUCT_MODEL 
-    GROUP BY BLZ7_ID 
-    HAVING COUNT(*) > 1
-)
-ORDER BY BLZ7_ID;
-
-select * from PROD where prod_id = 412 or prod_id = 468;
 select count(*) from PROD;
---3073661
---9088764
 
 
 
