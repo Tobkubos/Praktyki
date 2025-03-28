@@ -1,0 +1,31 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="TRIGGER_1_USERS_TRG" directorySegmentName="seg_0" id="CA0F3150-F880-A73D-0D08-C65213024FD4">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>TRIGGER_1_USERS_TRG</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:02 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<actions>INSERT</actions>
+<body><![CDATA[BEGIN
+        -- Sprawdzenie, czy USR_ID jest NULL i przypisanie wartości z SEQUENCE
+        IF :NEW.USR_ID IS NULL THEN
+            SELECT USERS_USR_ID_SEQ.NEXTVAL INTO :NEW.USR_ID FROM DUAL;
+        END IF;
+
+        -- Sprawdzenie, czy wartość globalnej zmiennej gUSER_ID jest NULL
+        IF PACKAGE_1_PKG.GET_USER_ID IS NULL THEN
+            -- Jeśli gUSER_ID jest NULL, przypisujemy CURRVAL SEQUENCE do CUSR_ID o UUSR_ID
+            SELECT USERS_USR_ID_SEQ.CURRVAL INTO :NEW.CUSR_ID FROM DUAL;
+            SELECT USERS_USR_ID_SEQ.CURRVAL INTO :NEW.UUSR_ID FROM DUAL;
+        ELSE
+            -- Jeśli gUSER_ID nie jest NULL, przypisujemy jej wartość do CUSR_ID i UUSR_ID
+            :NEW.CUSR_ID := PACKAGE_1_PKG.GET_USER_ID;
+            :NEW.UUSR_ID := PACKAGE_1_PKG.GET_USER_ID;
+        END IF;
+    END;
+]]></body>
+<triggerTime>BEFORE</triggerTime>
+<owner>0DEE203F-9FBB-0609-5469-AF874550ABA5</owner>
+<table>EE0369A9-3FA2-4C4A-F73B-AFA12EB69A79</table>
+</TriggerOraclev10g>

@@ -1,0 +1,24 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="TRIGGER_2_CATP_TRG" directorySegmentName="seg_0" id="0B83E15A-6274-B781-53D4-92EB9B0F5C58">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>TRIGGER_2_CATP_TRG</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:02 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<actions>UPDATE</actions>
+<body><![CDATA[DECLARE
+        v_user_id NUMBER;
+    BEGIN
+        v_user_id := PACKAGE_1_PKG.GET_USER_ID;
+
+        -- Ustawienie wartości timestamp
+        :NEW.UPDATED_DT := SYSDATE;
+        -- Automatyczne przypisanie ID użytkownika
+        :NEW.UUSR_ID := v_user_id;
+    END;
+]]></body>
+<triggerTime>BEFORE</triggerTime>
+<owner>0DEE203F-9FBB-0609-5469-AF874550ABA5</owner>
+<table>D4D3B3B7-FF53-2F9A-1232-B6CBDEF13F5D</table>
+</TriggerOraclev10g>

@@ -1,0 +1,82 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="USERS" directorySegmentName="seg_0" id="EE0369A9-3FA2-4C4A-F73B-AFA12EB69A79">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<schemaObject>D7A793D6-CE73-E248-DACC-90C889EF7744</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>654B1362-C850-0451-09C9-8459FC832830</segment>
+<tableSpace>996A1A87-ADC9-88B7-26DB-2600BF5C16FD</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<inMemory>NO</inMemory>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="UUSR_ID" id="2B299AE9-D912-D258-E8EA-8C06E8ABEEA4">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="CUSR_ID" id="2E1B9716-3373-A92B-E1E5-D59EAF06D38E">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="CREATED_DT" id="395B960B-2FCA-C403-1384-6B8B388B2338">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<defaultValue>SYSDATE</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="NAME" id="537B7615-9F00-F256-FF62-BE9D2D77157B">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="UPDATED_DT" id="6D40ABE3-3EBB-0562-5657-DB23ECF5EF22">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<defaultValue>SYSDATE</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="EMAIL" id="6EC64DBD-5D4F-5CD7-E18F-4B89CA66D703">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="USR_ID" id="906E7706-D22E-921B-C1F0-9BF9AF99727A">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="SURNAME" id="9F0022E3-E569-9CA1-5AD1-3E1BE64F39A4">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="USERS_USR_ID_PK" id="B23CC60B-BCFB-30EE-041A-B8162177E164">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:58 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<schemaObject>D7A793D6-CE73-E248-DACC-90C889EF7744</schemaObject>
+<segment>280D0131-1608-DDE3-68B8-8B67A8B1198A</segment>
+<tableSpace>996A1A87-ADC9-88B7-26DB-2600BF5C16FD</tableSpace>
+</IndexProxy>
+</indexProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="USERS_USR_ID_PK" id="ACE167AC-AF93-714D-48F4-3575863F21DF">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:00 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<segment>280D0131-1608-DDE3-68B8-8B67A8B1198A</segment>
+<tableSpace>996A1A87-ADC9-88B7-26DB-2600BF5C16FD</tableSpace>
+<existingIndex>B23CC60B-BCFB-30EE-041A-B8162177E164</existingIndex>
+<indexSegment>280D0131-1608-DDE3-68B8-8B67A8B1198A</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev12c>

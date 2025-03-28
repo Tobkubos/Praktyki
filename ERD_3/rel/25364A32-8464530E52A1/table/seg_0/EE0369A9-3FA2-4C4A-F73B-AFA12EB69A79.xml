@@ -1,0 +1,171 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="EE0369A9-3FA2-4C4A-F73B-AFA12EB69A79" schemaObject="D7A793D6-CE73-E248-DACC-90C889EF7744" name="USERS">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>USERS</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[{O: "MY_TESTING", C: "Tabela użytkowników"}]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="USR_ID" id="906E7706-D22E-921B-C1F0-9BF9AF99727A">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>USERS</sourceObjSchema>
+<sourceObjName>USR_ID</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Klucz główny]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NAME" id="537B7615-9F00-F256-FF62-BE9D2D77157B">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>USERS</sourceObjSchema>
+<sourceObjName>NAME</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Imię]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50 BYTE</dataTypeSize>
+<ownDataTypeParameters>50 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="SURNAME" id="9F0022E3-E569-9CA1-5AD1-3E1BE64F39A4">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>USERS</sourceObjSchema>
+<sourceObjName>SURNAME</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Nazwisko]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50 BYTE</dataTypeSize>
+<ownDataTypeParameters>50 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="EMAIL" id="6EC64DBD-5D4F-5CD7-E18F-4B89CA66D703">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>USERS</sourceObjSchema>
+<sourceObjName>EMAIL</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[e-mail]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50 BYTE</dataTypeSize>
+<ownDataTypeParameters>50 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CREATED_DT" id="395B960B-2FCA-C403-1384-6B8B388B2338">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>USERS</sourceObjSchema>
+<sourceObjName>CREATED_DT</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Data stworzenia]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<defaultValue>SYSDATE</defaultValue>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="UPDATED_DT" id="6D40ABE3-3EBB-0562-5657-DB23ECF5EF22">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>USERS</sourceObjSchema>
+<sourceObjName>UPDATED_DT</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Data aktualizacji]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<defaultValue>SYSDATE</defaultValue>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CUSR_ID" id="2E1B9716-3373-A92B-E1E5-D59EAF06D38E">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>USERS</sourceObjSchema>
+<sourceObjName>CUSR_ID</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[ID użytkownika który stworzył rekord]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="UUSR_ID" id="2B299AE9-D912-D258-E8EA-8C06E8ABEEA4">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>USERS</sourceObjSchema>
+<sourceObjName>UUSR_ID</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[ID użytkownika który zaktualizował rekord]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="ACE167AC-AF93-714D-48F4-3575863F21DF" name="USERS_USR_ID_PK">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>USERS_USR_ID_PK</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:00 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="906E7706-D22E-921B-C1F0-9BF9AF99727A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="B23CC60B-BCFB-30EE-041A-B8162177E164" schemaObject="D7A793D6-CE73-E248-DACC-90C889EF7744" name="USERS_USR_ID_PK">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>USERS_USR_ID_PK</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:58 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="906E7706-D22E-921B-C1F0-9BF9AF99727A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

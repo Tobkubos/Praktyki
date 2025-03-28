@@ -1,0 +1,137 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="PROD" directorySegmentName="seg_0" id="39E4D0D6-EB7F-E44B-7FA5-51400F45C62D">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<schemaObject>D7A793D6-CE73-E248-DACC-90C889EF7744</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>654B1362-C850-0451-09C9-8459FC832830</segment>
+<tableSpace>996A1A87-ADC9-88B7-26DB-2600BF5C16FD</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<inMemory>NO</inMemory>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="CREATED_DT" id="2230F9E5-4E92-0E20-161B-28A67FD037B7">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<defaultValue>SYSDATE</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="PROD_FORM" id="2F636DC3-0249-3F99-1793-D194BE52306A">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="PROD_STRENGTH" id="3338303B-13E1-B173-4EF5-BC5A9D8E28B5">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="BLZ7" id="56382235-BDF4-AEAA-31EE-303420E2CC08">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="MAH_ID" id="7660BA64-A101-7706-403F-951307361B2F">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="PROD_PACKAGE" id="78CB473B-DF12-016B-357E-CFD39978D766">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="STATUS" id="81F3383C-6436-78D8-7652-E90B082DF46E">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<defaultValue>&apos;I&apos;</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="PROD_ID" id="853114DD-72BD-9148-38CA-0223A2C004B3">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="PROD_PRICE" id="8809FBA4-7328-3A1F-D488-C1660CA4F06B">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<defaultValue>0</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="CUSR_ID" id="8A8996C1-46D4-2BBE-8BFD-E0248B585D4F">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="PROD_NAME" id="A1E526E2-CB00-C3F5-302A-ACEA37BA6B91">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="GTIN" id="A6F09E4A-5989-98C7-7E82-AB0FA619F45E">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="UUSR_ID" id="B490483F-8906-E7E8-A6A6-05EDC5B9EF40">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="UPDATED_DT" id="EB8B157F-BAD9-4E1B-43EE-B8227AC66727">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<defaultValue>SYSDATE</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="PROD_STOCK" id="EC88B7CA-DA24-581F-5850-B5A85256DE83">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<defaultValue>0</defaultValue>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="PROD_PROD_ID_PK" id="E5D82847-7149-E7DA-EFBF-923BF5721D49">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:58 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<schemaObject>D7A793D6-CE73-E248-DACC-90C889EF7744</schemaObject>
+<segment>280D0131-1608-DDE3-68B8-8B67A8B1198A</segment>
+<tableSpace>996A1A87-ADC9-88B7-26DB-2600BF5C16FD</tableSpace>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="PROD_MAH_MAH_ID_FK" id="0ACDB9A2-95A2-AE10-249F-B0952975CFA1">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:02 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="PROD_CUSR_ID_USR_ID_FK" id="19A97535-6521-9C5A-E08B-F2764DA46D3C">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:02 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="PROD_UUSR_ID_USR_ID_FK" id="E0D2D7CE-E8CC-BCB4-498F-B931E3779FAE">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:02 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="PROD_PROD_ID_PK" id="BFBEB776-21C1-C520-D26D-88426B025363">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:00 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<segment>280D0131-1608-DDE3-68B8-8B67A8B1198A</segment>
+<tableSpace>996A1A87-ADC9-88B7-26DB-2600BF5C16FD</tableSpace>
+<existingIndex>E5D82847-7149-E7DA-EFBF-923BF5721D49</existingIndex>
+<indexSegment>280D0131-1608-DDE3-68B8-8B67A8B1198A</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev12c>

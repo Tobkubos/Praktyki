@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="54773888-B70B-5D7D-7606-E05101B4065F" containerWithKeyObject="66B00ED2-4F9A-CDDF-4377-D35C1587406D" localFKIndex="A62952F4-6BB1-E2D7-FA88-514A92C3DC1D" name="CATP_PROD_CAPT_CATP_ID_FK">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>CATP_PROD_CAPT_CATP_ID_FK</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:02 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<referredTableLongName>MY_TESTING.CATP</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>D4D3B3B7-FF53-2F9A-1232-B6CBDEF13F5D</referredTableID>
+<keyObject>D7E9087A-8E1E-CB6A-B39F-68DA04AF4CD5</keyObject>
+<referredKeyID>D7E9087A-8E1E-CB6A-B39F-68DA04AF4CD5</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>CATP_ID</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

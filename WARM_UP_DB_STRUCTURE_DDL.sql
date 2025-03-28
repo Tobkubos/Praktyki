@@ -1,6 +1,8 @@
 
 --#########################################
 -- Skrypt stworzony przez: Tobiasz Kubiak
+--
+-- Uruchomienie całego skryptu zapewni zainicjowanie wszystkich potrzebnych tabel wraz z komentarzami.
 --#########################################
 
 /*
@@ -60,8 +62,9 @@ CREATE TABLE PROD(
     PROD_PRICE      NUMBER(15,3) DEFAULT 0 NOT NULL CHECK(PROD_PRICE BETWEEN 0 AND 999999999),
     
     CONSTRAINT PROD_PROD_ID_PK PRIMARY KEY (PROD_ID),
-    CONSTRAINT PROD_MAH_MAH_ID_FK FOREIGN KEY (MAH_ID) REFERENCES MAH(MAH_ID),
+    CONSTRAINT PROD_MAH_MAH_ID_FK FOREIGN KEY (MAH_ID) REFERENCES MAH(MAH_ID)
 );
+
 COMMENT ON TABLE PROD IS '{O: "MY_TESTING", C: "Produkty"}';
 COMMENT ON COLUMN PROD.PROD_ID IS 'Klucz główny';
 COMMENT ON COLUMN PROD.STATUS IS 'Status';
@@ -182,34 +185,3 @@ COMMENT ON COLUMN MAH.CREATED_DT IS 'Data stworzenia';
 COMMENT ON COLUMN MAH.UPDATED_DT IS 'Data aktualizacji';
 COMMENT ON COLUMN MAH.CUSR_ID IS 'ID użytkownika który stworzył rekord';
 COMMENT ON COLUMN MAH.UUSR_ID IS 'ID użytkownika który zaktualizował rekord';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

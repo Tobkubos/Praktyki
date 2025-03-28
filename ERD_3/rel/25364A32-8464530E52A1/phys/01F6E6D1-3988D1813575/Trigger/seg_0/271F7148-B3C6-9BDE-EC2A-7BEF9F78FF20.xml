@@ -1,0 +1,32 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TriggerOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.TriggerOraclev10g" name="TRIGGER_1_CATP_PROD_TRG" directorySegmentName="seg_0" id="271F7148-B3C6-9BDE-EC2A-7BEF9F78FF20">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>TRIGGER_1_CATP_PROD_TRG</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:02 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<actions>INSERT</actions>
+<body><![CDATA[DECLARE
+        v_user_id NUMBER;
+    BEGIN
+        v_user_id := PACKAGE_1_PKG.GET_USER_ID;
+
+        -- Ustawienie wartości timestamp
+        :NEW.CREATED_DT := SYSDATE;
+        :NEW.UPDATED_DT := SYSDATE;
+
+        -- Automatyczne przypisanie ID użytkownika
+        :NEW.CUSR_ID := v_user_id;
+        :NEW.UUSR_ID := v_user_id;
+
+        -- Ustawienie nowej wartości klucza głównego, jeśli jest NULL
+        IF :NEW.CATP_PROD_ID IS NULL THEN
+            :NEW.CATP_PROD_ID := CATP_PROD_CATP_PROD_ID_SEQ.NEXTVAL;
+        END IF;
+    END;
+]]></body>
+<triggerTime>BEFORE</triggerTime>
+<owner>0DEE203F-9FBB-0609-5469-AF874550ABA5</owner>
+<table>66B00ED2-4F9A-CDDF-4377-D35C1587406D</table>
+</TriggerOraclev10g>

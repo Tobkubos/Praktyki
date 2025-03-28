@@ -1,0 +1,345 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="39E4D0D6-EB7F-E44B-7FA5-51400F45C62D" schemaObject="D7A793D6-CE73-E248-DACC-90C889EF7744" name="PROD">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>PROD</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[{O: "MY_TESTING", C: "Produkty"}]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="PROD_ID" id="853114DD-72BD-9148-38CA-0223A2C004B3">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>PROD</sourceObjSchema>
+<sourceObjName>PROD_ID</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Klucz główny]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="STATUS" id="81F3383C-6436-78D8-7652-E90B082DF46E">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>PROD</sourceObjSchema>
+<sourceObjName>STATUS</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Status]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<constraintName>SYS_C008941</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT025</logicalDatatype>
+<dataTypeSize>1 BYTE</dataTypeSize>
+<listOfValues>
+<valueDef value="&apos;A&apos;" description=""/>
+<valueDef value="&apos;I&apos;" description=""/>
+</listOfValues>
+<defaultValue>&apos;I&apos;</defaultValue>
+<ownDataTypeParameters>1 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROD_NAME" id="A1E526E2-CB00-C3F5-302A-ACEA37BA6B91">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>PROD</sourceObjSchema>
+<sourceObjName>PROD_NAME</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Nazwa Produktu]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>120 BYTE</dataTypeSize>
+<ownDataTypeParameters>120 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROD_FORM" id="2F636DC3-0249-3F99-1793-D194BE52306A">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>PROD</sourceObjSchema>
+<sourceObjName>PROD_FORM</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Forma Produktu]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>40 BYTE</dataTypeSize>
+<ownDataTypeParameters>40 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROD_STRENGTH" id="3338303B-13E1-B173-4EF5-BC5A9D8E28B5">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>PROD</sourceObjSchema>
+<sourceObjName>PROD_STRENGTH</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Moc Produktu]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20 BYTE</dataTypeSize>
+<ownDataTypeParameters>20 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROD_PACKAGE" id="78CB473B-DF12-016B-357E-CFD39978D766">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>PROD</sourceObjSchema>
+<sourceObjName>PROD_PACKAGE</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Opakowanie]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>40 BYTE</dataTypeSize>
+<ownDataTypeParameters>40 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="MAH_ID" id="7660BA64-A101-7706-403F-951307361B2F">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>PROD</sourceObjSchema>
+<sourceObjName>MAH_ID</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[ID podmiotu odpowiedzialnego]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="2A0DB6EF-ABD6-719B-66F9-2D1EED916DD1" referredColumn="58ABA1AA-9DDF-5C7E-CF36-723982172C1A"/>
+</associations>
+</Column>
+<Column name="BLZ7" id="56382235-BDF4-AEAA-31EE-303420E2CC08">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>PROD</sourceObjSchema>
+<sourceObjName>BLZ7</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Kod BLZ7]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="GTIN" id="A6F09E4A-5989-98C7-7E82-AB0FA619F45E">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>PROD</sourceObjSchema>
+<sourceObjName>GTIN</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Globalny numer jednostki handlowej]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>14</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,14,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PROD_STOCK" id="EC88B7CA-DA24-581F-5850-B5A85256DE83">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>PROD</sourceObjSchema>
+<sourceObjName>PROD_STOCK</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Stan magazynowy]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<constraintName>SYS_C008942</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>15</dataTypePrecision>
+<dataTypeScale>3</dataTypeScale>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,15,3</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<listOfRanges>
+<rangeDef class="oracle.dbtools.crest.model.design.constraint.AVT">
+<beginValue>0</beginValue>
+<endValue>999999999</endValue>
+</rangeDef>
+</listOfRanges>
+</Column>
+<Column name="PROD_PRICE" id="8809FBA4-7328-3A1F-D488-C1660CA4F06B">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>PROD</sourceObjSchema>
+<sourceObjName>PROD_PRICE</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Cena produktu]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<constraintName>SYS_C008943</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>15</dataTypePrecision>
+<dataTypeScale>3</dataTypeScale>
+<defaultValue>0</defaultValue>
+<ownDataTypeParameters>,15,3</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<listOfRanges>
+<rangeDef class="oracle.dbtools.crest.model.design.constraint.AVT">
+<beginValue>0</beginValue>
+<endValue>999999999</endValue>
+</rangeDef>
+</listOfRanges>
+</Column>
+<Column name="CREATED_DT" id="2230F9E5-4E92-0E20-161B-28A67FD037B7">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>PROD</sourceObjSchema>
+<sourceObjName>CREATED_DT</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Data stworzenia]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<defaultValue>SYSDATE</defaultValue>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="UPDATED_DT" id="EB8B157F-BAD9-4E1B-43EE-B8227AC66727">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>PROD</sourceObjSchema>
+<sourceObjName>UPDATED_DT</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Data aktualizacji]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<defaultValue>SYSDATE</defaultValue>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CUSR_ID" id="8A8996C1-46D4-2BBE-8BFD-E0248B585D4F">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>PROD</sourceObjSchema>
+<sourceObjName>CUSR_ID</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[ID użytkownika który stworzył rekord]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="02C7EF2A-CEBC-5222-EE1A-AAB84C3F5105" referredColumn="906E7706-D22E-921B-C1F0-9BF9AF99727A"/>
+</associations>
+</Column>
+<Column name="UUSR_ID" id="B490483F-8906-E7E8-A6A6-05EDC5B9EF40">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>PROD</sourceObjSchema>
+<sourceObjName>UUSR_ID</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[ID użytkownika który zaktualizował rekord]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="763BA2B3-CFE6-FEEF-6239-B90D8BCE8D09" referredColumn="906E7706-D22E-921B-C1F0-9BF9AF99727A"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="BFBEB776-21C1-C520-D26D-88426B025363" name="PROD_PROD_ID_PK">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>PROD_PROD_ID_PK</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:00 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="853114DD-72BD-9148-38CA-0223A2C004B3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="E5D82847-7149-E7DA-EFBF-923BF5721D49" schemaObject="D7A793D6-CE73-E248-DACC-90C889EF7744" name="PROD_PROD_ID_PK">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>PROD_PROD_ID_PK</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:58 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="853114DD-72BD-9148-38CA-0223A2C004B3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="19A97535-6521-9C5A-E08B-F2764DA46D3C" name="PROD_CUSR_ID_USR_ID_FK">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:02 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="8A8996C1-46D4-2BBE-8BFD-E0248B585D4F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="0ACDB9A2-95A2-AE10-249F-B0952975CFA1" name="PROD_MAH_MAH_ID_FK">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:02 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7660BA64-A101-7706-403F-951307361B2F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="E0D2D7CE-E8CC-BCB4-498F-B931E3779FAE" name="PROD_UUSR_ID_USR_ID_FK">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:02 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B490483F-8906-E7E8-A6A6-05EDC5B9EF40"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

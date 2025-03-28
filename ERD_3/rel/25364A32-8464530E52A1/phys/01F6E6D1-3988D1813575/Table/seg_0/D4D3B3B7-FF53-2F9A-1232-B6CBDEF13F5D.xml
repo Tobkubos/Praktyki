@@ -1,0 +1,111 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="CATP" directorySegmentName="seg_0" id="D4D3B3B7-FF53-2F9A-1232-B6CBDEF13F5D">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<schemaObject>D7A793D6-CE73-E248-DACC-90C889EF7744</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>654B1362-C850-0451-09C9-8459FC832830</segment>
+<tableSpace>996A1A87-ADC9-88B7-26DB-2600BF5C16FD</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<inMemory>NO</inMemory>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="CREATED_DT" id="22F122F2-6849-3875-5A89-E5726F797FD4">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<defaultValue>SYSDATE</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="CUSR_ID" id="68251538-D222-D6C7-45AF-1EA72129CB1F">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ACTIVE" id="6B3621B5-D8C6-B80F-486E-8BFE2938A987">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<defaultValue>&apos;N&apos;</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="UPDATED_DT" id="7694A20C-2EF7-F50F-6163-084872A01F2B">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<defaultValue>SYSDATE</defaultValue>
+</ColumnProxy>
+<ColumnProxy name="UUSR_ID" id="77D61220-0D27-034A-BD81-8C1A69BBDC48">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="CATP_ID" id="936C58B0-72EC-5FCD-AFB0-417DF0CDB8D0">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="NAME" id="9F1EE5C4-301F-014E-F594-C6E1223C654A">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="CATP_NAME_UK" id="42F63AE3-B473-B3D9-CF76-3036D9F2DB49">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:57 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<schemaObject>D7A793D6-CE73-E248-DACC-90C889EF7744</schemaObject>
+<segment>280D0131-1608-DDE3-68B8-8B67A8B1198A</segment>
+<tableSpace>996A1A87-ADC9-88B7-26DB-2600BF5C16FD</tableSpace>
+</IndexProxy>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="CATP_CATP_ID_PK" id="CCB327EC-2665-67F8-A459-9DEBB4426518">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:57 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<schemaObject>D7A793D6-CE73-E248-DACC-90C889EF7744</schemaObject>
+<segment>280D0131-1608-DDE3-68B8-8B67A8B1198A</segment>
+<tableSpace>996A1A87-ADC9-88B7-26DB-2600BF5C16FD</tableSpace>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="CATP_CUSR_ID_USR_ID_FK" id="05A45D59-E923-BC05-D9F7-48B17070C156">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:02 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="CATP_UUSR_ID_USR_ID_FK" id="3A201C4F-E53B-4CBC-578C-E945D0B5717C">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:02 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="CATP_CATP_ID_PK" id="D7E9087A-8E1E-CB6A-B39F-68DA04AF4CD5">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:00 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<segment>280D0131-1608-DDE3-68B8-8B67A8B1198A</segment>
+<tableSpace>996A1A87-ADC9-88B7-26DB-2600BF5C16FD</tableSpace>
+<existingIndex>CCB327EC-2665-67F8-A459-9DEBB4426518</existingIndex>
+<indexSegment>280D0131-1608-DDE3-68B8-8B67A8B1198A</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="CATP_NAME_UK" id="56EAA8DA-CEA2-0C8F-72F1-F5560C56DE08">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:00 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<segment>280D0131-1608-DDE3-68B8-8B67A8B1198A</segment>
+<tableSpace>996A1A87-ADC9-88B7-26DB-2600BF5C16FD</tableSpace>
+<existingIndex>42F63AE3-B473-B3D9-CF76-3036D9F2DB49</existingIndex>
+<indexSegment>280D0131-1608-DDE3-68B8-8B67A8B1198A</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev12c>

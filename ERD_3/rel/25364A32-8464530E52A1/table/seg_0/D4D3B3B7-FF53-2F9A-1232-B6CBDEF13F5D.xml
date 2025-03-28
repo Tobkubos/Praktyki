@@ -1,0 +1,212 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="D4D3B3B7-FF53-2F9A-1232-B6CBDEF13F5D" schemaObject="D7A793D6-CE73-E248-DACC-90C889EF7744" name="CATP">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>CATP</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[{O: "MY_TESTING", C: "Kategorie produktów"}]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="CATP_ID" id="936C58B0-72EC-5FCD-AFB0-417DF0CDB8D0">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>CATP</sourceObjSchema>
+<sourceObjName>CATP_ID</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[klucz główny]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ACTIVE" id="6B3621B5-D8C6-B80F-486E-8BFE2938A987">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>CATP</sourceObjSchema>
+<sourceObjName>ACTIVE</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Status]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<constraintName>SYS_C008949</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT025</logicalDatatype>
+<dataTypeSize>1 BYTE</dataTypeSize>
+<listOfValues>
+<valueDef value="&apos;N&apos;" description=""/>
+<valueDef value="&apos;Y&apos;" description=""/>
+</listOfValues>
+<defaultValue>&apos;N&apos;</defaultValue>
+<ownDataTypeParameters>1 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="NAME" id="9F1EE5C4-301F-014E-F594-C6E1223C654A">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>CATP</sourceObjSchema>
+<sourceObjName>NAME</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Nazwa Kategorii]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>50 BYTE</dataTypeSize>
+<ownDataTypeParameters>50 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CREATED_DT" id="22F122F2-6849-3875-5A89-E5726F797FD4">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>CATP</sourceObjSchema>
+<sourceObjName>CREATED_DT</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Data stworzenia]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<defaultValue>SYSDATE</defaultValue>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="UPDATED_DT" id="7694A20C-2EF7-F50F-6163-084872A01F2B">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>CATP</sourceObjSchema>
+<sourceObjName>UPDATED_DT</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[Data aktualizacji]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<defaultValue>SYSDATE</defaultValue>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CUSR_ID" id="68251538-D222-D6C7-45AF-1EA72129CB1F">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>CATP</sourceObjSchema>
+<sourceObjName>CUSR_ID</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[ID użytkownika który stworzył rekord]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="066918AF-DC0B-A030-1855-490627F4F640" referredColumn="906E7706-D22E-921B-C1F0-9BF9AF99727A"/>
+</associations>
+</Column>
+<Column name="UUSR_ID" id="77D61220-0D27-034A-BD81-8C1A69BBDC48">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>CATP</sourceObjSchema>
+<sourceObjName>UUSR_ID</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:56 UTC</createdTime>
+<commentInRDBMS><![CDATA[ID użytkownika który zaktualizował rekord]]></commentInRDBMS>
+<ownerDesignName>ERD_3</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>10</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<ownDataTypeParameters>,10,0</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="7D8A6F3E-0989-6CC3-90C5-ED50A48897D4" referredColumn="906E7706-D22E-921B-C1F0-9BF9AF99727A"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="D7E9087A-8E1E-CB6A-B39F-68DA04AF4CD5" name="CATP_CATP_ID_PK">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>CATP_CATP_ID_PK</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:00 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="936C58B0-72EC-5FCD-AFB0-417DF0CDB8D0"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="56EAA8DA-CEA2-0C8F-72F1-F5560C56DE08" name="CATP_NAME_UK">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>CATP_NAME_UK</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:00 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="9F1EE5C4-301F-014E-F594-C6E1223C654A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="CCB327EC-2665-67F8-A459-9DEBB4426518" schemaObject="D7A793D6-CE73-E248-DACC-90C889EF7744" name="CATP_CATP_ID_PK">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>CATP_CATP_ID_PK</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:57 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="936C58B0-72EC-5FCD-AFB0-417DF0CDB8D0"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="42F63AE3-B473-B3D9-CF76-3036D9F2DB49" schemaObject="D7A793D6-CE73-E248-DACC-90C889EF7744" name="CATP_NAME_UK">
+<sourceConnName>myTesting</sourceConnName>
+<sourceObjSchema>MY_TESTING</sourceObjSchema>
+<sourceObjName>CATP_NAME_UK</sourceObjName>
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:00:57 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="9F1EE5C4-301F-014E-F594-C6E1223C654A"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="05A45D59-E923-BC05-D9F7-48B17070C156" name="CATP_CUSR_ID_USR_ID_FK">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:02 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="68251538-D222-D6C7-45AF-1EA72129CB1F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="3A201C4F-E53B-4CBC-578C-E945D0B5717C" name="CATP_UUSR_ID_USR_ID_FK">
+<createdBy>gregk</createdBy>
+<createdTime>2025-03-28 15:01:02 UTC</createdTime>
+<ownerDesignName>ERD_3</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="77D61220-0D27-034A-BD81-8C1A69BBDC48"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
