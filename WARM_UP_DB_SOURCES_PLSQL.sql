@@ -11,7 +11,11 @@ DROP SEQUENCE CATP_PROD_CATP_PROD_ID_SEQ;
 DROP SEQUENCE MAH_MAH_ID_SEQ;
 */
 
+/*
 
+trzeba zrobic package, pozwala to tworzyc zmienne globalne, stworzenie pakietu z jednej procedury i jedney funkcji, zadaniem procedury bedize wpisanie do package usera a funckja odczytuje odentyfikator
+
+*/
 
 
 
@@ -125,7 +129,8 @@ END FUNCTION_4_F;
 CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(p_usr_id NUMBER) AS
     CURSOR cur_source IS
         SELECT BLZ7_ID, KEAN, NAZW, POST, DAWK, OPAK, STOCK, PRICE, NPRD, PNZW, PKRJ
-        FROM EXAMPLE_PRODUCT_MODEL;
+        FROM EXAMPLE_PRODUCT_MODEL
+        ORDER BY PRID;
     
     
     v_post_clean VARCHAR2(100);
@@ -176,7 +181,7 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(p_usr_id NUMBER) AS
         -- 2. nazwa kat
         v_category_name := FUNCTION_2_F(v_post_clean);
  
-        -- Na poczatku sprawdzamy MAH, poniewaz PROD wymaga podania MAH_ID
+        -- Na poczatku sprawdzamy MAH, poniewaz PROD wymaga podania MAH_ID, sprawdzamy na podstawie nazwy
          BEGIN
             SELECT MAH_ID INTO v_mah_id 
             FROM MAH 
@@ -469,8 +474,25 @@ WITH READ ONLY;
 
 
 --INSERT INTO USERS (NAME, SURNAME, EMAIL) VALUES ('MY_TESTING', 'MY_TESTING', 'my_testing@test.com');
---EXEC PROCEDURE_1_P(1);
+EXEC PROCEDURE_1_P(1);
 --SELECT * from VIEW_2_V;
 --SELECT * from VIEW_1_V;
+
+
+SELECT * 
+FROM EXAMPLE_PRODUCT_MODEL 
+WHERE BLZ7_ID IN (
+    SELECT BLZ7_ID 
+    FROM EXAMPLE_PRODUCT_MODEL 
+    GROUP BY BLZ7_ID 
+    HAVING COUNT(*) > 1
+)
+ORDER BY BLZ7_ID;
+
+select * from PROD where prod_id = 412 or prod_id = 468;
+select count(*) from PROD;
+--3073661
+--9088764
+
 
 
