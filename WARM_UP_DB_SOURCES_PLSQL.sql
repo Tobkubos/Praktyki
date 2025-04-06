@@ -1,15 +1,12 @@
-
 --##############################################
 -- Skrypt stworzony przez: Tobiasz Kubiak
-
+--
 -- UWAGA: Najpierw należy uruchomić skrypt tworzący odpowiednie tabele - WARM_UP_STRUCTURE_DDL.sql
-
+--
 -- Uruchomienie obecnego całego skryptu zapewni zainicjowanie wszystkich potrzebnych obiektów sekwencji, triggerów, funkcji, i pakietów.
 -- Na samym dole w celach testowych automatycznie wykonuje się dodanie nowego usera "MY TESTING" do tabeli USERS i ustawienie aktualnego USERA na "1" (pierwszego z tabeli USERS).
-
 -- Argumentem procedury głównej jest ID Usera pobierane z gUSER_ID. Jeżeli aktualny gUSER_ID nie jest ustawiony procedura się nie wykona.
 --##############################################
-
 /*
 DROP SEQUENCE USERS_USR_ID_SEQ;
 DROP SEQUENCE PROD_PROD_ID_SEQ;
@@ -22,11 +19,9 @@ TRUNCATE TABLE CATP;
 TRUNCATE TABLE MAH;
 TRUNCATE TABLE USERS;
 */
-
 --##############################################
 -- PACKAGE
 --##############################################
-
 CREATE OR REPLACE PACKAGE PACKAGE_1_PKG AS
     -- Zmienna globalna dla usr_id
     gUSER_ID NUMBER;
@@ -198,16 +193,14 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(p_usr_id NUMBER) AS
         IF v_category IS NOT NULL THEN
             RETURN 'POSTAC: ' || v_category;
         ELSE
-            RETURN 'POSTAC: NIEZNANA';
+            RETURN 'INNE';
         END IF;
     END FUNCTION_2_F;
         
         
     BEGIN
     PACKAGE_1_PKG.SET_USER_ID(p_usr_id);
-        FOR rec IN cur_source LOOP
-            
-            /*
+        FOR rec IN cur_source LOOP   
             DBMS_OUTPUT.PUT_LINE('--------------------');
             DBMS_OUTPUT.PUT_LINE('BLZ7_ID: ' || rec.BLZ7_ID);
             DBMS_OUTPUT.PUT_LINE('KEAN: ' || rec.KEAN);
@@ -221,8 +214,6 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(p_usr_id NUMBER) AS
             DBMS_OUTPUT.PUT_LINE('PNZW: ' || rec.PNZW);
             DBMS_OUTPUT.PUT_LINE('PKRJ: ' || rec.PKRJ);
             DBMS_OUTPUT.PUT_LINE('--------------------');
-            */
-            
             -- 1. myslniki i spacje
             v_post_clean := FUNCTION_1_F(rec.POST);
             v_dawk_clean := FUNCTION_1_F(rec.DAWK);
@@ -232,7 +223,7 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(p_usr_id NUMBER) AS
             -- Na poczatku sprawdzamy MAH, poniewaz PROD wymaga podania MAH_ID, sprawdzamy na podstawie nazwy
              BEGIN
                 SELECT MAH_ID INTO v_mah_id 
-                FROM MAH 
+                FROM MAH
                 WHERE NAME = rec.PNZW;
              
             EXCEPTION
