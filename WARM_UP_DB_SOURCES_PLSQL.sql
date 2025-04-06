@@ -23,181 +23,146 @@ TRUNCATE TABLE USERS;
 -- PACKAGE
 --##############################################
 CREATE OR REPLACE PACKAGE PACKAGE_1_PKG AS
-    -- Zmienna globalna dla usr_id
-    gUSER_ID NUMBER;
-    PROCEDURE SET_USER_ID(p_usr_id NUMBER);
-    FUNCTION GET_USER_ID RETURN NUMBER;
-    PROCEDURE UPDATE_USER_IDS(p_usr_id NUMBER);
-    
+  gUSER_ID NUMBER;
+  PROCEDURE SET_USER_ID(p_usr_id NUMBER);
+  FUNCTION GET_USER_ID RETURN NUMBER;
 END PACKAGE_1_PKG;
 /
-
 CREATE OR REPLACE PACKAGE BODY PACKAGE_1_PKG AS
-
-    -- Procedura ustawiająca wartość zmiennej globalnej
-    PROCEDURE SET_USER_ID(p_usr_id NUMBER) IS
-    BEGIN
-        gUSER_ID := p_usr_id;
-    END SET_USER_ID;
-
-    -- Funkcja do odczytu wartości zmiennej globalnej
-    FUNCTION GET_USER_ID RETURN NUMBER IS
-    BEGIN
-        RETURN gUSER_ID;
-    END GET_USER_ID;
-
-    -- Procedura do uzupełniania CUSR_ID i UUSR_ID
-    PROCEDURE UPDATE_USER_IDS(p_usr_id NUMBER) IS
-    BEGIN
-        UPDATE USERS
-        SET CUSR_ID = p_usr_id, 
-            UUSR_ID = p_usr_id
-        WHERE USR_ID = p_usr_id;
-    END UPDATE_USER_IDS;
-
+  PROCEDURE SET_USER_ID(p_usr_id NUMBER) IS
+  BEGIN
+    gUSER_ID := p_usr_id;
+  END SET_USER_ID;
+--
+  FUNCTION GET_USER_ID RETURN NUMBER IS
+  BEGIN
+    RETURN gUSER_ID;
+  END GET_USER_ID;
 END PACKAGE_1_PKG;
 /
-
 --##############################################
 -- SEQUENCE
 --##############################################
 CREATE SEQUENCE USERS_USR_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+/
 CREATE SEQUENCE MAH_MAH_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+/
 CREATE SEQUENCE PROD_PROD_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+/
 CREATE SEQUENCE CATP_CATP_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
+/
 CREATE SEQUENCE CATP_PROD_CATP_PROD_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
-
+/
 --##############################################
 -- FUNCTIONS
 --##############################################    
 CREATE OR REPLACE FUNCTION FUNCTION_1_F(p_text VARCHAR2) RETURN VARCHAR2 IS
-    v_clean_text VARCHAR2(100);
-    BEGIN
-        v_clean_text := REPLACE(p_text, '-', '');
-        v_clean_text := REPLACE(v_clean_text, ' ', '');
-        
-    RETURN v_clean_text;
+  v_clean_text VARCHAR2(100);
+  BEGIN
+    v_clean_text := REPLACE(p_text, '-', '');
+    v_clean_text := REPLACE(v_clean_text, ' ', '');
+  RETURN v_clean_text;
 END FUNCTION_1_F;
 /
-
-CREATE OR REPLACE FUNCTION FUNCTION_3_F(
-    p_prod_id NUMBER,        
-    p_include_prefix NUMBER, -- 1 = dodajemy "(#PROD_ID)", 0 = nie
-    p_include_suffix NUMBER  -- 1 = dodajemy "MAH: NazwaProducenta", 0 = nie
-    ) RETURN VARCHAR2 IS
-    v_prod_name     VARCHAR2(100);
-    v_prod_form     VARCHAR2(50);
-    v_prod_strength VARCHAR2(50);
-    v_prod_package  VARCHAR2(50);
-    v_mah_name      VARCHAR2(100);
-    v_result        VARCHAR2(500);
-
-    -- Usuwanie nadmiarowych myślników i obsługa NULL
-    FUNCTION CLEAN_DASHES(p_text VARCHAR2) RETURN VARCHAR2 IS
-        BEGIN
-            RETURN REGEXP_REPLACE(NVL(TRIM(p_text), ''), '-{2,}', '-'); 
-    END CLEAN_DASHES;
-
-BEGIN
-    -- Pobranie danych
+CREATE OR REPLACE FUNCTION PROD_DESCRIBER_F(
+  p_prod_id NUMBER,        
+  p_include_prefix NUMBER, -- 1 = dodajemy "(#PROD_ID)", 0 = nie
+  p_include_suffix NUMBER  -- 1 = dodajemy "MAH: NazwaProducenta", 0 = nie
+  ) RETURN VARCHAR2 IS
+  v_prod_name     VARCHAR2(100);
+  v_prod_form     VARCHAR2(50);
+  v_prod_strength VARCHAR2(50);
+  v_prod_package  VARCHAR2(50);
+  v_mah_name      VARCHAR2(100);
+  v_result        VARCHAR2(500);
+  -- Usuwanie nadmiarowych myślników i obsługa NULL
+  FUNCTION CLEAN_DASHES_F(p_text VARCHAR2) RETURN VARCHAR2 IS
+    BEGIN
+      RETURN REGEXP_REPLACE(NVL(TRIM(p_text), ''), '-{2,}', '-'); 
+  END CLEAN_DASHES_F;
+  --
+  BEGIN
     SELECT PROD.PROD_NAME, PROD.PROD_FORM, PROD.PROD_STRENGTH, PROD.PROD_PACKAGE, MAH.NAME 
     INTO v_prod_name, v_prod_form, v_prod_strength, v_prod_package, v_mah_name
     FROM PROD
     LEFT JOIN MAH ON PROD.MAH_ID = MAH.MAH_ID
     WHERE PROD.PROD_ID = p_prod_id;
-
     -- Usunięcie nadmiarowych myślników
-    v_prod_name     := CLEAN_DASHES(v_prod_name);
-    v_prod_form     := CLEAN_DASHES(v_prod_form);
-    v_prod_strength := CLEAN_DASHES(v_prod_strength);
-    v_prod_package  := CLEAN_DASHES(v_prod_package);
-
+    v_prod_name     := CLEAN_DASHES_F(v_prod_name);
+    v_prod_form     := CLEAN_DASHES_F(v_prod_form);
+    v_prod_strength := CLEAN_DASHES_F(v_prod_strength);
+    v_prod_package  := CLEAN_DASHES_F(v_prod_package);
     -- Tworzenie głównej nazwy produktu
     v_result := v_prod_name || ' ' || v_prod_form || ' ' || v_prod_strength || ' ' || v_prod_package;
-
     -- Prefiks "(#PROD_ID)"
     IF p_include_prefix = 1 THEN
-        v_result := '(#' || p_prod_id || ') ' || v_result;
+      v_result := '(#' || p_prod_id || ') ' || v_result;
     END IF;
-
     -- Sufiks "MAH: NazwaProducenta"
     IF p_include_suffix = 1 THEN
-        v_result := v_result || ' MAH: ' || NVL(v_mah_name, 'BRAK PRODUCENTA');
+      v_result := v_result || ' MAH: ' || NVL(v_mah_name, 'NIEOKREŚLONE');
     END IF;
-
     -- Usunięcie nadmiarowych spacji
     v_result := REGEXP_REPLACE(v_result, '\s+', ' ');
-
     RETURN v_result;
-
-EXCEPTION
+  EXCEPTION
     WHEN NO_DATA_FOUND THEN
-        RETURN 'BRAK DANYCH DLA PROD_ID: ' || p_prod_id;
+      RETURN 'ERROR: NO DATA FOR PROD_ID: ' || p_prod_id;
     WHEN OTHERS THEN
-        RETURN 'BŁĄD: ' || SQLERRM;
-END FUNCTION_3_F;
+      RETURN 'ERROR: ' || SQLERRM;
+END PROD_DESCRIBER_F;
 /
-
-CREATE OR REPLACE FUNCTION FUNCTION_4_F(
-    p_catp_id NUMBER
-    ) RETURN VARCHAR2 IS
-    v_category_name VARCHAR(100);
-    v_product_count NUMBER;
-    v_result VARCHAR2(200);
-    
-    BEGIN 
-        SELECT CATP.NAME, COUNT(CATP_PROD_ID)
-        INTO v_category_name, v_product_count
-        FROM CATP
-        LEFT JOIN CATP_PROD ON CATP.CATP_ID = CATP_PROD.CATP_ID
-        WHERE CATP.CATP_ID = p_catp_id
-        GROUP BY CATP.NAME;
-        
-        v_result := 'POSTAC: ' || v_category_name || ' (' || v_product_count || ' )';
-        
-        RETURN v_result;
-        
-    EXCEPTION
-        WHEN NO_DATA_FOUND THEN
-            RETURN 'BRAK DANYCH DLA CATP_ID' || p_catp_id;
-        WHEN OTHERS THEN
-            RETURN 'BŁĄD ' || SQLERRM;
-END FUNCTION_4_F;
+CREATE OR REPLACE FUNCTION CAT_PROD_COUNTER_F(
+  p_catp_id NUMBER
+  ) RETURN VARCHAR2 IS
+  v_category_name VARCHAR(100);
+  v_product_count NUMBER;
+  v_result VARCHAR2(200);
+  BEGIN
+    SELECT CATP.NAME, COUNT(CATP_PROD_ID)
+    INTO v_category_name, v_product_count
+    FROM CATP
+    LEFT JOIN CATP_PROD ON CATP.CATP_ID = CATP_PROD.CATP_ID
+    WHERE CATP.CATP_ID = p_catp_id
+    GROUP BY CATP.NAME;
+    v_result := 'POSTAC: ' || v_category_name || ' (' || v_product_count || ' )';
+    RETURN v_result;
+  --
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      RETURN 'NO DATA FOR CATP_ID: ' || p_catp_id;
+    WHEN OTHERS THEN
+      RETURN 'ERROR: ' || SQLERRM;
+END CAT_PROD_COUNTER_F;
 /
-
 --#####################################################################################################################
 --
 --              GŁÓWNA PROCEDURA
 --
 --#####################################################################################################################
 CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(p_usr_id NUMBER) AS
-    CURSOR cur_source IS
-        SELECT PRID, BLZ7_ID, KEAN, NAZW, POST, DAWK, OPAK, STOCK, PRICE, NPRD, PNZW, PKRJ
-        FROM EXAMPLE_PRODUCT_MODEL
-        ORDER BY PRID;
-    
-    v_post_clean VARCHAR2(100);
-    v_dawk_clean VARCHAR2(100);
-    v_category_name VARCHAR2(100);
-    
-    v_prod_id NUMBER;
-    v_mah_id NUMBER;
-    v_catp_id NUMBER;
-    v_catp_prod_id NUMBER;
-   
-    FUNCTION FUNCTION_2_F(p_post VARCHAR2) RETURN VARCHAR2 IS
-        v_category VARCHAR2(100);
-    BEGIN
-        v_category := REGEXP_SUBSTR(TRIM(p_post), '^\S+|^[^.]+');
-        
-        IF v_category IS NOT NULL THEN
-            RETURN 'POSTAC: ' || v_category;
-        ELSE
-            RETURN 'INNE';
-        END IF;
-    END FUNCTION_2_F;
-        
-        
+  CURSOR cur_source IS
+    SELECT PRID, BLZ7_ID, KEAN, NAZW, POST, DAWK, OPAK, STOCK, PRICE, NPRD, PNZW, PKRJ
+    FROM EXAMPLE_PRODUCT_MODEL
+    ORDER BY PRID;
+  v_post_clean VARCHAR2(100);
+  v_dawk_clean VARCHAR2(100);
+  v_category_name VARCHAR2(100);
+  v_prod_id NUMBER;
+  v_mah_id NUMBER;
+  v_catp_id NUMBER;
+  v_catp_prod_id NUMBER;
+  FUNCTION FUNCTION_2_F(p_post VARCHAR2) RETURN VARCHAR2 IS
+    v_category VARCHAR2(100);
+  BEGIN
+    v_category := REGEXP_SUBSTR(TRIM(p_post), '^\S+|^[^.]+');
+    IF v_category IS NOT NULL THEN
+      RETURN 'POSTAC: ' || v_category;
+    ELSE
+      RETURN 'INNE';
+    END IF;
+  END FUNCTION_2_F;
+  --
     BEGIN
     PACKAGE_1_PKG.SET_USER_ID(p_usr_id);
         FOR rec IN cur_source LOOP   
@@ -482,7 +447,7 @@ SELECT
     PROD_ID, 
     PROD.PROD_STOCK, 
     PROD.PROD_PRICE, 
-    FUNCTION_3_F(PROD_ID, 0, 0) AS "PRODUCT NAME", 
+    PROD_DESCRIBER_F(PROD_ID, 0, 0) AS "PRODUCT NAME", 
     MAH.NAME AS "MAH_NAME"
 FROM PROD
 JOIN MAH ON PROD.MAH_ID = MAH.MAH_ID
@@ -491,14 +456,13 @@ WITH READ ONLY;
 --#####################################################################################################################
 -- TEST AREA
 --#####################################################################################################################
-INSERT INTO USERS (NAME, SURNAME, EMAIL) VALUES ('MY_TESTING', 'MY_TESTING', 'my_testing@test.com');
-
 BEGIN
     PACKAGE_1_PKG.SET_USER_ID(1);
 END;
 /
-
-EXEC PROCEDURE_1_P(PACKAGE_1_PKG.get_user_id);
+INSERT INTO USERS (NAME, SURNAME, EMAIL) VALUES ('MY_TESTING', 'MY_TESTING', 'my_testing@test.com');
+--EXEC PROCEDURE_1_P(PACKAGE_1_PKG.get_user_id);
+--select CURRENT_TIMESTAMP from dual;
 --SELECT * from VIEW_2_V;
 --SELECT * from VIEW_1_V;
 
