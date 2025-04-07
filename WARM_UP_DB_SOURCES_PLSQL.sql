@@ -1,4 +1,4 @@
---##############################################
+--############################################################################################
 -- Skrypt stworzony przez: Tobiasz Kubiak
 --
 -- UWAGA: Najpierw należy uruchomić skrypt tworzący odpowiednie tabele - WARM_UP_STRUCTURE_DDL.sql
@@ -6,7 +6,7 @@
 -- Uruchomienie obecnego całego skryptu zapewni zainicjowanie wszystkich potrzebnych obiektów sekwencji, triggerów, funkcji, i pakietów.
 -- Na samym dole w celach testowych automatycznie wykonuje się dodanie nowego usera "MY TESTING" do tabeli USERS i ustawienie aktualnego USERA na "1" (pierwszego z tabeli USERS).
 -- Argumentem procedury głównej jest ID Usera pobierane z gUSER_ID. Jeżeli aktualny gUSER_ID nie jest ustawiony procedura się nie wykona.
---##############################################
+--############################################################################################
 /*
 DROP SEQUENCE USERS_USR_ID_SEQ;
 DROP SEQUENCE PROD_PROD_ID_SEQ;
@@ -19,30 +19,30 @@ TRUNCATE TABLE CATP;
 TRUNCATE TABLE MAH;
 TRUNCATE TABLE USERS;
 */
---##############################################
+--############################################################################################
 -- PACKAGE
---##############################################
-CREATE OR REPLACE PACKAGE PACKAGE_1_PKG AS
+--############################################################################################
+CREATE OR REPLACE PACKAGE GLOBAL_USER_PKG AS
   gUSER_ID NUMBER;
   PROCEDURE SET_USER_ID(p_usr_id NUMBER);
   FUNCTION GET_USER_ID RETURN NUMBER;
-END PACKAGE_1_PKG;
+END GLOBAL_USER_PKG;
 /
-CREATE OR REPLACE PACKAGE BODY PACKAGE_1_PKG AS
+CREATE OR REPLACE PACKAGE BODY GLOBAL_USER_PKG AS
   PROCEDURE SET_USER_ID(p_usr_id NUMBER) IS
   BEGIN
     gUSER_ID := p_usr_id;
   END SET_USER_ID;
---
+  --
   FUNCTION GET_USER_ID RETURN NUMBER IS
   BEGIN
     RETURN gUSER_ID;
   END GET_USER_ID;
-END PACKAGE_1_PKG;
+END GLOBAL_USER_PKG;
 /
---##############################################
+--############################################################################################
 -- SEQUENCE
---##############################################
+--############################################################################################
 CREATE SEQUENCE USERS_USR_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 /
 CREATE SEQUENCE MAH_MAH_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
@@ -53,16 +53,16 @@ CREATE SEQUENCE CATP_CATP_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 /
 CREATE SEQUENCE CATP_PROD_CATP_PROD_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 /
---##############################################
+--############################################################################################
 -- FUNCTIONS
---##############################################    
-CREATE OR REPLACE FUNCTION FUNCTION_1_F(p_text VARCHAR2) RETURN VARCHAR2 IS
+--############################################################################################    
+CREATE OR REPLACE FUNCTION CLEAR_STRING_F(p_text VARCHAR2) RETURN VARCHAR2 IS
   v_clean_text VARCHAR2(100);
   BEGIN
     v_clean_text := REPLACE(p_text, '-', '');
     v_clean_text := REPLACE(v_clean_text, ' ', '');
   RETURN v_clean_text;
-END FUNCTION_1_F;
+END CLEAR_STRING_F;
 /
 CREATE OR REPLACE FUNCTION PROD_DESCRIBER_F(
   p_prod_id NUMBER,        
@@ -74,8 +74,8 @@ CREATE OR REPLACE FUNCTION PROD_DESCRIBER_F(
   v_prod_strength VARCHAR2(50);
   v_prod_package  VARCHAR2(50);
   v_mah_name      VARCHAR2(100);
-  v_result        VARCHAR2(500);
-  -- Usuwanie nadmiarowych myślników i obsługa NULL
+  v_result        VARCHAR2(200);
+  -- Usuwanie nadmiarowych myślników
   FUNCTION CLEAN_DASHES_F(p_text VARCHAR2) RETURN VARCHAR2 IS
     BEGIN
       RETURN REGEXP_REPLACE(NVL(TRIM(p_text), ''), '-{2,}', '-'); 
@@ -135,12 +135,10 @@ CREATE OR REPLACE FUNCTION CAT_PROD_COUNTER_F(
       RETURN 'ERROR: ' || SQLERRM;
 END CAT_PROD_COUNTER_F;
 /
---#####################################################################################################################
---
---              GŁÓWNA PROCEDURA
---
---#####################################################################################################################
-CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(p_usr_id NUMBER) AS
+--############################################################################################    
+-- GŁÓWNA PROCEDURA
+--############################################################################################    
+CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
   CURSOR cur_source IS
     SELECT PRID, BLZ7_ID, KEAN, NAZW, POST, DAWK, OPAK, STOCK, PRICE, NPRD, PNZW, PKRJ
     FROM EXAMPLE_PRODUCT_MODEL
@@ -152,7 +150,7 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(p_usr_id NUMBER) AS
   v_mah_id NUMBER;
   v_catp_id NUMBER;
   v_catp_prod_id NUMBER;
-  FUNCTION FUNCTION_2_F(p_post VARCHAR2) RETURN VARCHAR2 IS
+  FUNCTION GET_FORM_CAT_F(p_post VARCHAR2) RETURN VARCHAR2 IS
     v_category VARCHAR2(100);
   BEGIN
     v_category := REGEXP_SUBSTR(TRIM(p_post), '^\S+|^[^.]+');
@@ -161,311 +159,224 @@ CREATE OR REPLACE PROCEDURE PROCEDURE_1_P(p_usr_id NUMBER) AS
     ELSE
       RETURN 'INNE';
     END IF;
-  END FUNCTION_2_F;
+  END GET_FORM_CAT_F;
   --
-    BEGIN
-    PACKAGE_1_PKG.SET_USER_ID(p_usr_id);
-        FOR rec IN cur_source LOOP   
-            DBMS_OUTPUT.PUT_LINE('--------------------');
-            DBMS_OUTPUT.PUT_LINE('BLZ7_ID: ' || rec.BLZ7_ID);
-            DBMS_OUTPUT.PUT_LINE('KEAN: ' || rec.KEAN);
-            DBMS_OUTPUT.PUT_LINE('NAZW: ' || rec.NAZW);
-            DBMS_OUTPUT.PUT_LINE('POST: ' || rec.POST);
-            DBMS_OUTPUT.PUT_LINE('DAWK: ' || rec.DAWK);
-            DBMS_OUTPUT.PUT_LINE('OPAK: ' || rec.OPAK);
-            DBMS_OUTPUT.PUT_LINE('STOCK: ' || rec.STOCK);
-            DBMS_OUTPUT.PUT_LINE('PRICE: ' || rec.PRICE);
-            DBMS_OUTPUT.PUT_LINE('NPRD: ' || rec.NPRD);
-            DBMS_OUTPUT.PUT_LINE('PNZW: ' || rec.PNZW);
-            DBMS_OUTPUT.PUT_LINE('PKRJ: ' || rec.PKRJ);
-            DBMS_OUTPUT.PUT_LINE('--------------------');
-            -- 1. myslniki i spacje
-            v_post_clean := FUNCTION_1_F(rec.POST);
-            v_dawk_clean := FUNCTION_1_F(rec.DAWK);
-            -- 2. nazwa kat
-            v_category_name := FUNCTION_2_F(v_post_clean);
-     
-            -- Na poczatku sprawdzamy MAH, poniewaz PROD wymaga podania MAH_ID, sprawdzamy na podstawie nazwy
-             BEGIN
-                SELECT MAH_ID INTO v_mah_id 
-                FROM MAH
-                WHERE NAME = rec.PNZW;
-             
-            EXCEPTION
-                WHEN NO_DATA_FOUND THEN
-                    --wstawiamy nowy rekord i pobieramy ID
-                    INSERT INTO MAH (NAME, COUNTRY)
-                    VALUES (rec.PNZW, NVL(rec.PKRJ, 'BRAK WPISU'))
-                    RETURNING MAH_ID INTO v_mah_id;
-            END;
-            
-            BEGIN
-                -- Sprawdź czy istnieje produkt
-                SELECT PROD_ID INTO v_prod_id
-                FROM PROD
-                WHERE PROD_ID = rec.PRID
-                FOR UPDATE NOWAIT;
-                
-                UPDATE PROD
-                    SET 
-                        PROD_NAME = rec.nazw,
-                        PROD_FORM = v_post_clean,
-                        PROD_STRENGTH = v_dawk_clean,
-                        PROD_PACKAGE = rec.OPAK,
-                        PROD_STOCK = rec.STOCK,
-                        PROD_PRICE = rec.PRICE
-                    WHERE PROD_ID = v_prod_id;
-                    
-                EXCEPTION
-                    WHEN NO_DATA_FOUND THEN
-                        INSERT INTO PROD(PROD_NAME, PROD_FORM, PROD_STRENGTH, PROD_PACKAGE, MAH_ID, BLZ7, GTIN, PROD_STOCK, PROD_PRICE)
-                        VALUES (rec.NAZW, rec.POST, rec.DAWK, rec.OPAK, v_mah_id, rec.BLZ7_ID, rec.KEAN, rec.STOCK, rec.PRICE)
-                        RETURNING PROD_ID INTO v_prod_id;
-            END;
-            
-            -- sprawdzenie czy CATP juz istnieje
-            BEGIN
-                SELECT CATP_ID into v_catp_id 
-                    FROM CATP
-                    WHERE NAME = v_category_name
-                    FOR UPDATE NOWAIT;
-                    
-                EXCEPTION
-                    WHEN NO_DATA_FOUND THEN
-                        INSERT INTO CATP(NAME)
-                        VALUES(v_category_name)
-                        RETURNING CATP_ID INTO v_catp_id;
-            END;
-            --/*
-            -- sprawdzenie czy CATP_PROD juz istnieje
-            BEGIN
-                INSERT INTO CATP_PROD (CATP_ID, PROD_ID)
-                SELECT v_catp_id, v_prod_id FROM DUAL
-                WHERE NOT EXISTS(
-                SELECT 1 FROM CATP_PROD WHERE CATP_ID = v_catp_id AND PROD_ID = v_prod_id);
-            END;
-           -- */     
-    END LOOP;
-END;
-/
-
---#####################################################################################################################
---
---          TRIGGER 1 - trigger podczas wstawiania nowego rekordu
---
---#####################################################################################################################
-CREATE OR REPLACE TRIGGER TRIGGER_1_PROD_TRG
-    BEFORE INSERT ON PROD
-    FOR EACH ROW
-    DECLARE
-        v_user_id NUMBER;
-    BEGIN
-        v_user_id := PACKAGE_1_PKG.GET_USER_ID;
-    
-        -- Ustawienie wartości timestamp
-        :NEW.CREATED_DT := SYSDATE;
-        :NEW.UPDATED_DT := SYSDATE;
-    
-        -- Automatyczne przypisanie ID użytkownika
-        :NEW.CUSR_ID := v_user_id;
-        :NEW.UUSR_ID := v_user_id;
-    
-        -- Ustawienie nowej wartości klucza głównego, jeśli jest NULL
-        IF :NEW.PROD_ID IS NULL THEN
-            :NEW.PROD_ID := PROD_PROD_ID_SEQ.NEXTVAL;
+  BEGIN
+    GLOBAL_USER_PKG.SET_USER_ID(p_usr_id);
+    FOR rec IN cur_source LOOP   
+      DBMS_OUTPUT.PUT_LINE('--------------------');
+      DBMS_OUTPUT.PUT_LINE('BLZ7_ID: ' || rec.BLZ7_ID);
+      DBMS_OUTPUT.PUT_LINE('KEAN: ' || rec.KEAN);
+      DBMS_OUTPUT.PUT_LINE('NAZW: ' || rec.NAZW);
+      DBMS_OUTPUT.PUT_LINE('POST: ' || rec.POST);
+      DBMS_OUTPUT.PUT_LINE('DAWK: ' || rec.DAWK);
+      DBMS_OUTPUT.PUT_LINE('OPAK: ' || rec.OPAK);
+      DBMS_OUTPUT.PUT_LINE('STOCK: ' || rec.STOCK);
+      DBMS_OUTPUT.PUT_LINE('PRICE: ' || rec.PRICE);
+      DBMS_OUTPUT.PUT_LINE('NPRD: ' || rec.NPRD);
+      DBMS_OUTPUT.PUT_LINE('PNZW: ' || rec.PNZW);
+      DBMS_OUTPUT.PUT_LINE('PKRJ: ' || rec.PKRJ);
+      DBMS_OUTPUT.PUT_LINE('--------------------');
+      -- String cleaning
+      v_post_clean := CLEAR_STRING_F(rec.POST);
+      v_dawk_clean := CLEAR_STRING_F(rec.DAWK);
+      -- Building category string
+      v_category_name := GET_FORM_CAT_F(v_post_clean);
+      --INSERTING TO MAH
+      DECLARE
+        v_exists NUMBER;
+      BEGIN
+        SELECT COUNT(*) INTO v_exists FROM MAH WHERE NAME = rec.PNZW;
+        IF v_exists = 0 THEN
+          INSERT INTO MAH (NAME, COUNTRY)
+          VALUES (rec.PNZW, NVL(rec.PKRJ, 'BRAK WPISU'));
         END IF;
-    END;
-/
-
-CREATE OR REPLACE TRIGGER TRIGGER_1_MAH_TRG
-    BEFORE INSERT ON MAH
-    FOR EACH ROW
-    DECLARE
-        v_user_id NUMBER;
-    BEGIN
-        v_user_id := PACKAGE_1_PKG.GET_USER_ID;
-        
-        -- Ustawienie wartości timestamp
-        :NEW.CREATED_DT := SYSDATE;
-        :NEW.UPDATED_DT := SYSDATE;
-    
-        -- Automatyczne przypisanie ID użytkownika
-        :NEW.CUSR_ID := v_user_id;
-        :NEW.UUSR_ID := v_user_id;
-    
-        -- Ustawienie nowej wartości klucza głównego, jeśli jest NULL
-        IF :NEW.MAH_ID IS NULL THEN
-            :NEW.MAH_ID := MAH_MAH_ID_SEQ.NEXTVAL;
-        END IF;
-    END;
-/
-
-CREATE OR REPLACE TRIGGER TRIGGER_1_USERS_TRG
-    BEFORE INSERT ON USERS
-    FOR EACH ROW
-    BEGIN
-        -- Sprawdzenie, czy USR_ID jest NULL i przypisanie wartości z SEQUENCE
-        IF :NEW.USR_ID IS NULL THEN
-            SELECT USERS_USR_ID_SEQ.NEXTVAL INTO :NEW.USR_ID FROM DUAL;
-        END IF;
-        
-        -- Sprawdzenie, czy wartość globalnej zmiennej gUSER_ID jest NULL
-        IF PACKAGE_1_PKG.GET_USER_ID IS NULL THEN
-            -- Jeśli gUSER_ID jest NULL, przypisujemy CURRVAL SEQUENCE do CUSR_ID o UUSR_ID
-            SELECT USERS_USR_ID_SEQ.CURRVAL INTO :NEW.CUSR_ID FROM DUAL;
-            SELECT USERS_USR_ID_SEQ.CURRVAL INTO :NEW.UUSR_ID FROM DUAL;
+        SELECT MAH_ID INTO v_mah_id FROM MAH WHERE NAME = rec.PNZW;
+      END;
+      --INSERTING TO PROD
+      DECLARE
+        v_exists NUMBER;
+      BEGIN
+        SELECT COUNT(*) INTO v_exists 
+        FROM PROD 
+        WHERE PROD_ID = rec.PRID;
+        IF v_exists = 0 THEN
+          INSERT INTO PROD(PROD_NAME, PROD_FORM, PROD_STRENGTH, PROD_PACKAGE, MAH_ID, BLZ7, GTIN, PROD_STOCK, PROD_PRICE) 
+          VALUES (rec.NAZW, v_post_clean, v_dawk_clean, rec.OPAK, v_mah_id, rec.BLZ7_ID, rec.KEAN, rec.STOCK, rec.PRICE)
+          RETURNING PROD_ID INTO v_prod_id;
         ELSE
-            -- Jeśli gUSER_ID nie jest NULL, przypisujemy jej wartość do CUSR_ID i UUSR_ID
-            :NEW.CUSR_ID := PACKAGE_1_PKG.GET_USER_ID;
-            :NEW.UUSR_ID := PACKAGE_1_PKG.GET_USER_ID;
+          SELECT PROD_ID INTO v_prod_id 
+          FROM PROD 
+          WHERE PROD_ID = rec.PRID;
         END IF;
-    END;
+      END;
+      --INSERTING TO CATP
+      DECLARE
+        v_exists NUMBER;
+      BEGIN
+        SELECT COUNT(*) INTO v_exists 
+        FROM CATP 
+        WHERE NAME = v_category_name;
+        IF v_exists = 0 THEN
+          INSERT INTO CATP(NAME)
+          VALUES(v_category_name)
+          RETURNING CATP_ID INTO v_catp_id;
+        ELSE
+          SELECT CATP_ID INTO v_catp_id 
+          FROM CATP 
+          WHERE NAME = v_category_name;
+        END IF;
+      END;  
+      --INSERTING TO CATP PTOD
+      DECLARE
+        v_exists NUMBER;
+      BEGIN
+        SELECT COUNT(*) INTO v_exists
+        FROM CATP_PROD
+        WHERE CATP_ID = v_catp_id AND PROD_ID = v_prod_id;
+        IF v_exists = 0 THEN
+          INSERT INTO CATP_PROD (CATP_ID, PROD_ID)
+          VALUES (v_catp_id, v_prod_id);
+        END IF;
+      END;  
+    END LOOP;
+  END;
 /
-
+--############################################################################################    
+-- TRIGGER 1 - trigger podczas wstawiania nowego rekordu
+--############################################################################################    
+CREATE OR REPLACE TRIGGER TRIGGER_1_PROD_TRG
+  BEFORE INSERT ON PROD
+  FOR EACH ROW
+  BEGIN
+    :NEW.CREATED_DT := SYSDATE;
+    :NEW.UPDATED_DT := SYSDATE;
+    :NEW.CUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    IF :NEW.PROD_ID IS NULL THEN
+      :NEW.PROD_ID := PROD_PROD_ID_SEQ.NEXTVAL;
+    END IF;
+  END;
+/
+CREATE OR REPLACE TRIGGER TRIGGER_1_MAH_TRG
+  BEFORE INSERT ON MAH
+  FOR EACH ROW
+  BEGIN
+    :NEW.CREATED_DT := SYSDATE;
+    :NEW.UPDATED_DT := SYSDATE;
+    :NEW.CUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    IF :NEW.MAH_ID IS NULL THEN
+      :NEW.MAH_ID := MAH_MAH_ID_SEQ.NEXTVAL;
+    END IF;
+  END;
+/
+CREATE OR REPLACE TRIGGER TRIGGER_1_USERS_TRG
+  BEFORE INSERT ON USERS
+  FOR EACH ROW
+  BEGIN
+    -- Sprawdzenie, czy USR_ID jest NULL i przypisanie wartości z SEQUENCE
+    IF :NEW.USR_ID IS NULL THEN
+      SELECT USERS_USR_ID_SEQ.NEXTVAL INTO :NEW.USR_ID FROM DUAL;
+    END IF;
+    -- Sprawdzenie, czy wartość globalnej zmiennej gUSER_ID jest NULL
+    IF GLOBAL_USER_PKG.GET_USER_ID IS NULL THEN
+      SELECT USERS_USR_ID_SEQ.CURRVAL INTO :NEW.CUSR_ID FROM DUAL;
+      SELECT USERS_USR_ID_SEQ.CURRVAL INTO :NEW.UUSR_ID FROM DUAL;
+    ELSE
+      :NEW.CUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+      :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    END IF;
+  END;
+/
 CREATE OR REPLACE TRIGGER TRIGGER_1_CATP_TRG
-    BEFORE INSERT ON CATP
-    FOR EACH ROW
-    DECLARE
-        v_user_id NUMBER;
-    BEGIN
-        v_user_id := PACKAGE_1_PKG.GET_USER_ID;
-    
-        -- Ustawienie wartości timestamp
-        :NEW.CREATED_DT := SYSDATE;
-        :NEW.UPDATED_DT := SYSDATE;
-    
-        -- Automatyczne przypisanie ID użytkownika
-        :NEW.CUSR_ID := v_user_id;
-        :NEW.UUSR_ID := v_user_id;
-    
-        -- Ustawienie nowej wartości klucza głównego, jeśli jest NULL
-        IF :NEW.CATP_ID IS NULL THEN
-            :NEW.CATP_ID := CATP_CATP_ID_SEQ.NEXTVAL;
-        END IF;
-    END;
+  BEFORE INSERT ON CATP
+  FOR EACH ROW
+  BEGIN
+    :NEW.CREATED_DT := SYSDATE;
+    :NEW.UPDATED_DT := SYSDATE;
+    :NEW.CUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    IF :NEW.CATP_ID IS NULL THEN
+        :NEW.CATP_ID := CATP_CATP_ID_SEQ.NEXTVAL;
+    END IF;
+  END;
 /
-
 CREATE OR REPLACE TRIGGER TRIGGER_1_CATP_PROD_TRG
-    BEFORE INSERT ON CATP_PROD
-    FOR EACH ROW
-    DECLARE
-        v_user_id NUMBER;
-    BEGIN
-        v_user_id := PACKAGE_1_PKG.GET_USER_ID;
-    
-        -- Ustawienie wartości timestamp
-        :NEW.CREATED_DT := SYSDATE;
-        :NEW.UPDATED_DT := SYSDATE;
-    
-        -- Automatyczne przypisanie ID użytkownika
-        :NEW.CUSR_ID := v_user_id;
-        :NEW.UUSR_ID := v_user_id;
-    
-        -- Ustawienie nowej wartości klucza głównego, jeśli jest NULL
-        IF :NEW.CATP_PROD_ID IS NULL THEN
-            :NEW.CATP_PROD_ID := CATP_PROD_CATP_PROD_ID_SEQ.NEXTVAL;
-        END IF;
-    END;
+  BEFORE INSERT ON CATP_PROD
+  FOR EACH ROW
+  BEGIN
+    :NEW.CREATED_DT := SYSDATE;
+    :NEW.UPDATED_DT := SYSDATE;
+    :NEW.CUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    IF :NEW.CATP_PROD_ID IS NULL THEN
+      :NEW.CATP_PROD_ID := CATP_PROD_CATP_PROD_ID_SEQ.NEXTVAL;
+    END IF;
+  END;
 /
---#####################################################################################################################
---
---          TRIGGER 2 - trigger podczas aktualizacji rekordu
---
---#####################################################################################################################
+--############################################################################################    
+-- TRIGGER 2 - trigger podczas aktualizacji rekordu
+--############################################################################################    
 CREATE OR REPLACE TRIGGER TRIGGER_2_PROD_TRG
-    BEFORE UPDATE ON PROD
-    FOR EACH ROW
-    DECLARE
-        v_user_id NUMBER;
-    BEGIN
-        v_user_id := PACKAGE_1_PKG.GET_USER_ID;
-    
-        -- Ustawienie wartości timestamp
-        :NEW.UPDATED_DT := SYSDATE;
-        -- Automatyczne przypisanie ID użytkownika
-        :NEW.UUSR_ID := v_user_id;
-    END;
+  BEFORE UPDATE ON PROD
+  FOR EACH ROW
+  BEGIN
+    :NEW.UPDATED_DT := SYSDATE;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+  END;
 /
-
 CREATE OR REPLACE TRIGGER TRIGGER_2_USERS_TRG
-    BEFORE UPDATE ON USERS
-    FOR EACH ROW
-    DECLARE
-        v_user_id NUMBER;
-    BEGIN
-        v_user_id := PACKAGE_1_PKG.GET_USER_ID;
-    
-        -- Ustawienie wartości timestamp
-        :NEW.UPDATED_DT := SYSDATE;
-        -- Automatyczne przypisanie ID użytkownika
-        :NEW.UUSR_ID := v_user_id;
-    END;
+  BEFORE UPDATE ON USERS
+  FOR EACH ROW
+  BEGIN
+    :NEW.UPDATED_DT := SYSDATE;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+  END;
 /
-
 CREATE OR REPLACE TRIGGER TRIGGER_2_CATP_TRG
-    BEFORE UPDATE ON CATP
-    FOR EACH ROW
-    DECLARE
-        v_user_id NUMBER;
-    BEGIN
-        v_user_id := PACKAGE_1_PKG.GET_USER_ID;
-    
-        -- Ustawienie wartości timestamp
-        :NEW.UPDATED_DT := SYSDATE;
-        -- Automatyczne przypisanie ID użytkownika
-        :NEW.UUSR_ID := v_user_id;
-    END;
+  BEFORE UPDATE ON CATP
+  FOR EACH ROW
+  BEGIN
+    :NEW.UPDATED_DT := SYSDATE;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+  END;
 /
-
 CREATE OR REPLACE TRIGGER TRIGGER_2_CATP_PROD_TRG
-    BEFORE UPDATE ON CATP_PROD
-    FOR EACH ROW
-    DECLARE
-        v_user_id NUMBER;
-    BEGIN
-        v_user_id := PACKAGE_1_PKG.GET_USER_ID;
-        -- Ustawienie wartości timestamp
-        :NEW.UPDATED_DT := SYSDATE;
-        -- Automatyczne przypisanie ID użytkownika
-        :NEW.UUSR_ID := v_user_id;
-    END;
+  BEFORE UPDATE ON CATP_PROD
+  FOR EACH ROW
+  BEGIN
+    :NEW.UPDATED_DT := SYSDATE;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+  END;
 /
-
-
 CREATE OR REPLACE VIEW VIEW_2_V AS
-    SELECT 
-        CATP.CATP_ID, 
-        CATP.NAME || ' (' || 
-        (SELECT COUNT(*) FROM CATP_PROD WHERE CATP_PROD.CATP_ID = CATP.CATP_ID) 
-        || ')' AS NAME
-    FROM CATP
-    WITH READ ONLY;
-    
-    
+  SELECT 
+    CATP.CATP_ID, 
+    CATP.NAME || ' (' || 
+    (SELECT COUNT(*) FROM CATP_PROD WHERE CATP_PROD.CATP_ID = CATP.CATP_ID) 
+    || ')' AS NAME
+  FROM CATP
+  WITH READ ONLY;
+--
 CREATE OR REPLACE VIEW VIEW_1_V AS 
-SELECT 
+  SELECT 
     PROD_ID, 
     PROD.PROD_STOCK, 
     PROD.PROD_PRICE, 
     PROD_DESCRIBER_F(PROD_ID, 0, 0) AS "PRODUCT NAME", 
     MAH.NAME AS "MAH_NAME"
-FROM PROD
-JOIN MAH ON PROD.MAH_ID = MAH.MAH_ID
-WITH READ ONLY;
-
---#####################################################################################################################
+  FROM PROD
+  JOIN MAH ON PROD.MAH_ID = MAH.MAH_ID
+  WITH READ ONLY;
+--############################################################################################
 -- TEST AREA
---#####################################################################################################################
+--############################################################################################
 BEGIN
-    PACKAGE_1_PKG.SET_USER_ID(1);
+  GLOBAL_USER_PKG.SET_USER_ID(1);
 END;
 /
 INSERT INTO USERS (NAME, SURNAME, EMAIL) VALUES ('MY_TESTING', 'MY_TESTING', 'my_testing@test.com');
---EXEC PROCEDURE_1_P(PACKAGE_1_PKG.get_user_id);
---select CURRENT_TIMESTAMP from dual;
+EXEC IMPORT_FROM_MODEL_P(GLOBAL_USER_PKG.get_user_id);
 --SELECT * from VIEW_2_V;
 --SELECT * from VIEW_1_V;
-
-
-
-
