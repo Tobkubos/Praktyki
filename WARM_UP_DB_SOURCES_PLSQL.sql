@@ -1,11 +1,12 @@
 --############################################################################################
--- Skrypt stworzony przez: Tobiasz Kubiak
+-- AUTHOR: TK
 --
--- UWAGA: Najpierw należy uruchomić skrypt tworzący odpowiednie tabele - WARM_UP_STRUCTURE_DDL.sql
+-- ATTENTION!: First, execute the script that creates the necessary tables: WARM_UP_STRUCTURE_DDL.sql.​
 --
--- Uruchomienie obecnego całego skryptu zapewni zainicjowanie wszystkich potrzebnych obiektów sekwencji, triggerów, funkcji, i pakietów.
--- Na samym dole w celach testowych automatycznie wykonuje się dodanie nowego usera "MY TESTING" do tabeli USERS i ustawienie aktualnego USERA na "1" (pierwszego z tabeli USERS).
--- Argumentem procedury głównej jest ID Usera pobierane z gUSER_ID. Jeżeli aktualny gUSER_ID nie jest ustawiony procedura się nie wykona.
+--
+-- Running this entire script will initialize all required objects, including sequences, triggers, functions, and packages.
+-- At the very end, for testing purposes, a new user "TEST" will be automatically added to the USERS table.
+-- The current user will be set to "1" (the first entry in the USERS table).
 --############################################################################################
 /*
 DROP SEQUENCE USERS_USR_ID_SEQ;
@@ -19,6 +20,8 @@ TRUNCATE TABLE CATP;
 TRUNCATE TABLE MAH;
 TRUNCATE TABLE USERS;
 */
+--SET SERVEROUTPUT ON;
+--SET SERVEROUTPUT OFF;
 --############################################################################################
 -- PACKAGE
 --############################################################################################
@@ -55,7 +58,8 @@ CREATE SEQUENCE CATP_PROD_CATP_PROD_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE N
 /
 --############################################################################################
 -- FUNCTIONS
---############################################################################################    
+--############################################################################################
+-- Clears the string from excesive dashes and spaces
 CREATE OR REPLACE FUNCTION CLEAR_STRING_F(p_text VARCHAR2) RETURN VARCHAR2 IS
   v_clean_text VARCHAR2(100);
   BEGIN
@@ -64,10 +68,11 @@ CREATE OR REPLACE FUNCTION CLEAR_STRING_F(p_text VARCHAR2) RETURN VARCHAR2 IS
   RETURN v_clean_text;
 END CLEAR_STRING_F;
 /
+-- Returns string containing full description (args are options for final result)
 CREATE OR REPLACE FUNCTION PROD_DESCRIBE_F(
   p_prod_id NUMBER,        
-  p_include_prefix NUMBER, -- 1 = dodajemy "(#PROD_ID)", 0 = nie
-  p_include_suffix NUMBER  -- 1 = dodajemy "MAH: NazwaProducenta", 0 = nie
+  p_include_prefix NUMBER, -- 1 = adding "(#PROD_ID)", 0 = not
+  p_include_suffix NUMBER  -- 1 = adding "MAH: NazwaProducenta", 0 = not
   ) RETURN VARCHAR2 IS
   v_prod_name     VARCHAR2(100);
   v_prod_form     VARCHAR2(50);
@@ -75,7 +80,7 @@ CREATE OR REPLACE FUNCTION PROD_DESCRIBE_F(
   v_prod_package  VARCHAR2(50);
   v_mah_name      VARCHAR2(100);
   v_result        VARCHAR2(200);
-  -- Usuwanie nadmiarowych myślników
+  -- Local function for clearing excesive dashes
   FUNCTION CLEAN_DASHES_F(p_text VARCHAR2) RETURN VARCHAR2 IS
     BEGIN
       RETURN REGEXP_REPLACE(NVL(TRIM(p_text), ''), '-{2,}', '-'); 
@@ -87,22 +92,22 @@ CREATE OR REPLACE FUNCTION PROD_DESCRIBE_F(
     FROM PROD
     LEFT JOIN MAH ON PROD.MAH_ID = MAH.MAH_ID
     WHERE PROD.PROD_ID = p_prod_id;
-    -- Usunięcie nadmiarowych myślników
+    --
     v_prod_name     := CLEAN_DASHES_F(v_prod_name);
     v_prod_form     := CLEAN_DASHES_F(v_prod_form);
     v_prod_strength := CLEAN_DASHES_F(v_prod_strength);
     v_prod_package  := CLEAN_DASHES_F(v_prod_package);
-    -- Tworzenie głównej nazwy produktu
+    -- Creating product name
     v_result := v_prod_name || ' ' || v_prod_form || ' ' || v_prod_strength || ' ' || v_prod_package;
-    -- Prefiks "(#PROD_ID)"
+    -- Prefix "(#PROD_ID)"
     IF p_include_prefix = 1 THEN
       v_result := '(#' || p_prod_id || ') ' || v_result;
     END IF;
-    -- Sufiks "MAH: NazwaProducenta"
+    -- Sufix "MAH: NazwaProducenta"
     IF p_include_suffix = 1 THEN
       v_result := v_result || ' MAH: ' || NVL(v_mah_name, 'NIEOKREŚLONE');
     END IF;
-    -- Usunięcie nadmiarowych spacji
+    -- Clearing string from excesive spaces
     v_result := REGEXP_REPLACE(v_result, '\s+', ' ');
     RETURN v_result;
   EXCEPTION
@@ -136,7 +141,7 @@ CREATE OR REPLACE FUNCTION CAT_PROD_COUNTER_F(
 END CAT_PROD_COUNTER_F;
 /
 --############################################################################################    
--- GŁÓWNA PROCEDURA
+-- Main procedure - imports data from model to appropriate tables
 --############################################################################################    
 CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
   CURSOR cur_source IS
@@ -150,6 +155,7 @@ CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
   v_mah_id NUMBER;
   v_catp_id NUMBER;
   v_catp_prod_id NUMBER;
+  -- Local function that creates FORM phrase from first word
   FUNCTION GET_FORM_CAT_F(p_post VARCHAR2) RETURN VARCHAR2 IS
     v_category VARCHAR2(100);
   BEGIN
@@ -180,7 +186,7 @@ CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
       -- String cleaning
       v_post_clean := CLEAR_STRING_F(rec.POST);
       v_dawk_clean := CLEAR_STRING_F(rec.DAWK);
-      -- Building category string
+      -- Building category string from first word
       v_category_name := GET_FORM_CAT_F(v_post_clean);
       --INSERTING TO MAH
       DECLARE
@@ -192,30 +198,32 @@ CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
           VALUES (rec.PNZW, NVL(rec.PKRJ, 'BRAK WPISU'));
         END IF;
         SELECT MAH_ID INTO v_mah_id FROM MAH WHERE NAME = rec.PNZW;
+        EXCEPTION WHEN OTHERS THEN
+          DBMS_OUTPUT.PUT_LINE('Error while handling MAH for PNZW: ' || rec.PNZW);
+          DBMS_OUTPUT.PUT_LINE('Error message: ' || SQLERRM);
       END;
       --INSERTING TO PROD
       DECLARE
         v_exists NUMBER;
       BEGIN
-        SELECT COUNT(*) INTO v_exists 
+        SELECT COUNT(*) INTO v_exists
         FROM PROD 
         WHERE PROD_ID = rec.PRID;
         IF v_exists = 0 THEN
           INSERT INTO PROD(PROD_NAME, PROD_FORM, PROD_STRENGTH, PROD_PACKAGE, MAH_ID, BLZ7, GTIN, PROD_STOCK, PROD_PRICE) 
           VALUES (rec.NAZW, v_post_clean, v_dawk_clean, rec.OPAK, v_mah_id, rec.BLZ7_ID, rec.KEAN, rec.STOCK, rec.PRICE)
           RETURNING PROD_ID INTO v_prod_id;
-        ELSE
-          SELECT PROD_ID INTO v_prod_id 
-          FROM PROD 
-          WHERE PROD_ID = rec.PRID;
         END IF;
+        EXCEPTION WHEN OTHERS THEN
+          DBMS_OUTPUT.PUT_LINE('Error while handling PROD for PRID: ' || rec.PRID);
+          DBMS_OUTPUT.PUT_LINE('Error message: ' || SQLERRM);
       END;
       --INSERTING TO CATP
       DECLARE
         v_exists NUMBER;
       BEGIN
-        SELECT COUNT(*) INTO v_exists 
-        FROM CATP 
+        SELECT COUNT(*) INTO v_exists
+        FROM CATP
         WHERE NAME = v_category_name;
         IF v_exists = 0 THEN
           INSERT INTO CATP(NAME)
@@ -226,8 +234,11 @@ CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
           FROM CATP 
           WHERE NAME = v_category_name;
         END IF;
+        EXCEPTION WHEN OTHERS THEN
+          DBMS_OUTPUT.PUT_LINE('Error while handling CATP for v_category_name: ' || v_category_name);
+          DBMS_OUTPUT.PUT_LINE('Error message: ' || SQLERRM);
       END;  
-      --INSERTING TO CATP PTOD
+      --INSERTING TO CATP_PTOD
       DECLARE
         v_exists NUMBER;
       BEGIN
@@ -238,12 +249,15 @@ CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
           INSERT INTO CATP_PROD (CATP_ID, PROD_ID)
           VALUES (v_catp_id, v_prod_id);
         END IF;
+        EXCEPTION WHEN OTHERS THEN
+          DBMS_OUTPUT.PUT_LINE('Error while handling CATP_PROD for v_catp_id | v_prod_id: ' || v_catp_id ||' | '|| v_prod_id);
+          DBMS_OUTPUT.PUT_LINE('Error message: ' || SQLERRM);
       END;  
     END LOOP;
   END;
 /
 --############################################################################################    
--- TRIGGER 1 - trigger podczas wstawiania nowego rekordu
+-- TRIGGER 1 - trigger for insert operation
 --############################################################################################    
 CREATE OR REPLACE TRIGGER PROD_INSERT_TRG
   BEFORE INSERT ON PROD
@@ -311,7 +325,7 @@ CREATE OR REPLACE TRIGGER CATP_PROD_INSERT_TRG
   END;
 /
 --############################################################################################    
--- TRIGGER 2 - trigger podczas aktualizacji rekordu
+-- TRIGGER 2 - trigger for update operation
 --############################################################################################    
 CREATE OR REPLACE TRIGGER PROD_UPDATE_TRG
   BEFORE UPDATE ON PROD
@@ -375,13 +389,22 @@ CREATE OR REPLACE VIEW FULL_PROD_INFO_V AS
 --############################################################################################
 -- TEST AREA
 --############################################################################################
+-- Setting user to 1
 BEGIN
   GLOBAL_USER_PKG.SET_USER_ID(1);
 END;
 /
-INSERT INTO USERS (NAME, SURNAME, EMAIL) VALUES ('TEST', 'TEST', 'my_testing@test.com');
+-- Inserting first user
+INSERT INTO USERS (NAME, SURNAME, EMAIL) VALUES ('TEST2', 'TEST2', 'my_testing@test.com');
+-- Executing main procedure
 EXEC IMPORT_FROM_MODEL_P(GLOBAL_USER_PKG.get_user_id);
+-- Inserting test product to check if the next product has ID number 1001
 INSERT INTO PROD(PROD_NAME, PROD_FORM, PROD_STRENGTH, PROD_PACKAGE, MAH_ID, BLZ7, GTIN, PROD_STOCK, PROD_PRICE)
-VALUES ('TEST', 'TEST', 'TEST', 'TEST', 100, 12345, 123456, 999, 69);
+VALUES ('TEST NAZWA', 'TEST FORM', 'TEST DAWKA', 'TEST OPAK', 100, 12345, 123456, 999, 69);
+-- Show view
 --SELECT * from CATP_PROD_COUNT_V;
 --SELECT * from FULL_PROD_INFO_V;
+-- check if every object is VALID
+--SELECT OBJECT_TYPE, OBJECT_NAME, STATUS FROM USER_OBJECTS WHERE STATUS = 'VALID' ORDER BY OBJECT_TYPE, OBJECT_NAME;
+SELECT OBJECT_TYPE, OBJECT_NAME, STATUS FROM USER_OBJECTS WHERE STATUS != 'VALID' ORDER BY OBJECT_TYPE, OBJECT_NAME;
+--COMMIT;
