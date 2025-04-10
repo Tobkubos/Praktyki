@@ -3,7 +3,6 @@
 --
 -- ATTENTION!: First, execute the script that creates the necessary tables: WARM_UP_STRUCTURE_DDL.sql.​
 --
---
 -- Running this entire script will initialize all required objects, including sequences, triggers, functions, and packages.
 -- At the very end, for testing purposes, a new user "TEST" will be automatically added to the USERS table.
 -- The current user will be set to "1" (the first entry in the USERS table).
