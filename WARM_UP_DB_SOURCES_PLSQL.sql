@@ -1,4 +1,4 @@
---############################################################################################
+--======================================================================================
 -- AUTHOR: TK
 --
 -- ATTENTION!: First, execute the script that creates the necessary tables: WARM_UP_STRUCTURE_DDL.sql.​
@@ -6,7 +6,7 @@
 -- Running this entire script will initialize all required objects, including sequences, triggers, functions, and packages.
 -- At the very end, for testing purposes, a new user "TEST" will be automatically added to the USERS table.
 -- The current user will be set to "1" (the first entry in the USERS table).
---############################################################################################
+--======================================================================================
 /*
 DROP SEQUENCE USERS_USR_ID_SEQ;
 DROP SEQUENCE PROD_PROD_ID_SEQ;
@@ -21,10 +21,10 @@ TRUNCATE TABLE USERS;
 */
 --SET SERVEROUTPUT ON;
 --SET SERVEROUTPUT OFF;
---############################################################################################
--- PACKAGE
---############################################################################################
 CREATE OR REPLACE PACKAGE GLOBAL_USER_PKG AS
+  --############################################################################################
+  -- Package consisting of global variable storing actual user_id also providing getter and setter
+  --############################################################################################
   gUSER_ID NUMBER;
   PROCEDURE SET_USER_ID(p_usr_id NUMBER);
   FUNCTION GET_USER_ID RETURN NUMBER;
@@ -42,9 +42,9 @@ CREATE OR REPLACE PACKAGE BODY GLOBAL_USER_PKG AS
   END GET_USER_ID;
 END GLOBAL_USER_PKG;
 /
---############################################################################################
--- SEQUENCE
---############################################################################################
+--======================================================================================
+-- SEQUENCES
+--======================================================================================
 CREATE SEQUENCE USERS_USR_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 /
 CREATE SEQUENCE MAH_MAH_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
@@ -55,11 +55,14 @@ CREATE SEQUENCE CATP_CATP_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 /
 CREATE SEQUENCE CATP_PROD_CATP_PROD_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 /
---############################################################################################
+--======================================================================================
 -- FUNCTIONS
---############################################################################################
+--======================================================================================
 -- Clears the string from excesive dashes and spaces
 CREATE OR REPLACE FUNCTION CLEAR_STRING_F(p_text VARCHAR2) RETURN VARCHAR2 IS
+  --############################################################################################
+  -- Clears the string from excesive dashes and spaces
+  --############################################################################################
   v_clean_text VARCHAR2(100);
   BEGIN
     v_clean_text := REPLACE(p_text, '-', '');
@@ -67,8 +70,10 @@ CREATE OR REPLACE FUNCTION CLEAR_STRING_F(p_text VARCHAR2) RETURN VARCHAR2 IS
   RETURN v_clean_text;
 END CLEAR_STRING_F;
 /
--- Returns string containing full description (args are options for final result)
 CREATE OR REPLACE FUNCTION PROD_DESCRIBE_F(
+  --############################################################################################
+  -- Returns string containing full description (args are options for final result)
+  --############################################################################################
   p_prod_id NUMBER,        
   p_include_prefix NUMBER, -- 1 = adding "(#PROD_ID)", 0 = not
   p_include_suffix NUMBER  -- 1 = adding "MAH: NazwaProducenta", 0 = not
@@ -117,6 +122,9 @@ CREATE OR REPLACE FUNCTION PROD_DESCRIBE_F(
 END PROD_DESCRIBE_F;
 /
 CREATE OR REPLACE FUNCTION CAT_PROD_COUNTER_F(
+  --############################################################################################
+  -- Returns how much products are in the category
+  --############################################################################################
   p_catp_id NUMBER
   ) RETURN VARCHAR2 IS
   v_category_name VARCHAR(100);
@@ -139,10 +147,13 @@ CREATE OR REPLACE FUNCTION CAT_PROD_COUNTER_F(
       RETURN 'ERROR: ' || SQLERRM;
 END CAT_PROD_COUNTER_F;
 /
---############################################################################################    
--- Main procedure - imports data from model to appropriate tables
---############################################################################################    
+--======================================================================================
+-- PROCEDURES
+--======================================================================================
 CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
+  --############################################################################################    
+  -- Main procedure - imports data from model to appropriate tables
+  --############################################################################################  
   CURSOR cur_source IS
     SELECT PRID, BLZ7_ID, KEAN, NAZW, POST, DAWK, OPAK, STOCK, PRICE, NPRD, PNZW, PKRJ
     FROM EXAMPLE_PRODUCT_MODEL
@@ -253,126 +264,158 @@ CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
           DBMS_OUTPUT.PUT_LINE('Error message: ' || SQLERRM);
       END;  
     END LOOP;
+    COMMIT;
   END;
 /
---############################################################################################    
+--======================================================================================  
 -- TRIGGER 1 - trigger for insert operation
---############################################################################################    
+--======================================================================================
 CREATE OR REPLACE TRIGGER PROD_INSERT_TRG
+  --###############################
+  -- Trigger for inserting in PROD
+  --###############################
   BEFORE INSERT ON PROD
   FOR EACH ROW
   BEGIN
     :NEW.CREATED_DT := SYSDATE;
     :NEW.UPDATED_DT := SYSDATE;
-    :NEW.CUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
-    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    :NEW.CUSR_ID := GLOBAL_USER_PKG.gUSER_ID;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.gUSER_ID;
     IF :NEW.PROD_ID IS NULL THEN
       :NEW.PROD_ID := PROD_PROD_ID_SEQ.NEXTVAL;
     END IF;
   END;
 /
 CREATE OR REPLACE TRIGGER MAH_INSERT_TRG
+  --###############################
+  -- Trigger for inserting in MAH
+  --###############################
   BEFORE INSERT ON MAH
   FOR EACH ROW
   BEGIN
     :NEW.CREATED_DT := SYSDATE;
     :NEW.UPDATED_DT := SYSDATE;
-    :NEW.CUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
-    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    :NEW.CUSR_ID := GLOBAL_USER_PKG.gUSER_ID;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.gUSER_ID;
     IF :NEW.MAH_ID IS NULL THEN
       :NEW.MAH_ID := MAH_MAH_ID_SEQ.NEXTVAL;
     END IF;
   END;
 /
 CREATE OR REPLACE TRIGGER USERS_INSERT_TRG
+  --###############################
+  -- Trigger for inserting in USERS
+  --###############################
   BEFORE INSERT ON USERS
   FOR EACH ROW
   BEGIN
     :NEW.CREATED_DT := SYSDATE;
     :NEW.UPDATED_DT := SYSDATE;
-    :NEW.CUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
-    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    :NEW.CUSR_ID := GLOBAL_USER_PKG.gUSER_ID;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.gUSER_ID;
     IF :NEW.USR_ID IS NULL THEN
         :NEW.USR_ID := USERS_USR_ID_SEQ.NEXTVAL;
     END IF;
   END;
 /
 CREATE OR REPLACE TRIGGER CATP_INSERT_TRG
+  --###############################
+  -- Trigger for inserting in CATP
+  --###############################
   BEFORE INSERT ON CATP
   FOR EACH ROW
   BEGIN
     :NEW.CREATED_DT := SYSDATE;
     :NEW.UPDATED_DT := SYSDATE;
-    :NEW.CUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
-    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    :NEW.CUSR_ID := GLOBAL_USER_PKG.gUSER_ID;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.gUSER_ID;
     IF :NEW.CATP_ID IS NULL THEN
         :NEW.CATP_ID := CATP_CATP_ID_SEQ.NEXTVAL;
     END IF;
   END;
 /
 CREATE OR REPLACE TRIGGER CATP_PROD_INSERT_TRG
+  --###############################
+  -- Trigger for inserting in CATP_PROD
+  --###############################
   BEFORE INSERT ON CATP_PROD
   FOR EACH ROW
   BEGIN
     :NEW.CREATED_DT := SYSDATE;
     :NEW.UPDATED_DT := SYSDATE;
-    :NEW.CUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
-    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    :NEW.CUSR_ID := GLOBAL_USER_PKG.gUSER_ID;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.gUSER_ID;
     IF :NEW.CATP_PROD_ID IS NULL THEN
       :NEW.CATP_PROD_ID := CATP_PROD_CATP_PROD_ID_SEQ.NEXTVAL;
     END IF;
   END;
 /
---############################################################################################    
+--======================================================================================  
 -- TRIGGER 2 - trigger for update operation
---############################################################################################    
+--======================================================================================
 CREATE OR REPLACE TRIGGER PROD_UPDATE_TRG
+  --###############################
+  -- Trigger for updating in PROD
+  --###############################
   BEFORE UPDATE ON PROD
   FOR EACH ROW
   BEGIN
     :NEW.UPDATED_DT := SYSDATE;
-    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.gUSER_ID;
   END;
 /
 CREATE OR REPLACE TRIGGER MAH_UPDATE_TRG
+  --###############################
+  -- Trigger for updating in MAH
+  --###############################
   BEFORE UPDATE ON MAH
   FOR EACH ROW
   BEGIN
     :NEW.UPDATED_DT := SYSDATE;
-    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.gUSER_ID;
   END;
 /
 CREATE OR REPLACE TRIGGER USERS_UPDATE_TRG
+  --###############################
+  -- Trigger for updating in USERS
+  --###############################
   BEFORE UPDATE ON USERS
   FOR EACH ROW
   BEGIN
     :NEW.UPDATED_DT := SYSDATE;
-    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.gUSER_ID;
   END;
 /
 CREATE OR REPLACE TRIGGER CATP_UPDATE_TRG
+  --###############################
+  -- Trigger for updating in CATP
+  --###############################
   BEFORE UPDATE ON CATP
   FOR EACH ROW
   BEGIN
     :NEW.UPDATED_DT := SYSDATE;
-    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.gUSER_ID;
   END;
 /
 CREATE OR REPLACE TRIGGER CATP_PROD_UPDATE_TRG
+  --###############################
+  -- Trigger for updating in CATP_PROD
+  --###############################
   BEFORE UPDATE ON CATP_PROD
   FOR EACH ROW
   BEGIN
     :NEW.UPDATED_DT := SYSDATE;
-    :NEW.UUSR_ID := GLOBAL_USER_PKG.GET_USER_ID;
+    :NEW.UUSR_ID := GLOBAL_USER_PKG.gUSER_ID;
   END;
 /
 CREATE OR REPLACE VIEW CATP_PROD_COUNT_V AS
   SELECT 
     CATP.CATP_ID, 
-    CATP.NAME || ' (' || 
-    (SELECT COUNT(*) FROM CATP_PROD WHERE CATP_PROD.CATP_ID = CATP.CATP_ID) 
-    || ')' AS NAME
+    CATP.NAME || ' (' || COUNT(CATP_PROD.CATP_ID) || ')' AS NAME
   FROM CATP
+    LEFT JOIN CATP_PROD ON (CATP_PROD.CATP_ID = CATP.CATP_ID)
+  GROUP BY CATP.CATP_ID, CATP.NAME
+  ORDER BY CATP.CATP_ID
   WITH READ ONLY;
 --
 CREATE OR REPLACE VIEW FULL_PROD_INFO_V AS 
@@ -383,11 +426,14 @@ CREATE OR REPLACE VIEW FULL_PROD_INFO_V AS
     PROD_DESCRIBE_F(PROD_ID, 0, 0) AS "PRODUCT NAME", 
     MAH.NAME AS "MAH_NAME"
   FROM PROD
-  JOIN MAH ON PROD.MAH_ID = MAH.MAH_ID
+  JOIN MAH ON (PROD.MAH_ID = MAH.MAH_ID)
   WITH READ ONLY;
---############################################################################################
+--======================================================================================
 -- TEST AREA
---############################################################################################
+--======================================================================================
+-- Check if every object is VALID
+SELECT OBJECT_TYPE, OBJECT_NAME, STATUS FROM ALL_OBJECTS WHERE STATUS != 'VALID' ORDER BY OBJECT_TYPE, OBJECT_NAME;
+--SELECT OBJECT_TYPE, OBJECT_NAME, STATUS FROM ALL_OBJECTS WHERE STATUS = 'VALID' ORDER BY OBJECT_TYPE, OBJECT_NAME;
 -- Setting user to 1
 BEGIN
   GLOBAL_USER_PKG.SET_USER_ID(1);
@@ -398,12 +444,8 @@ INSERT INTO USERS (NAME, SURNAME, EMAIL) VALUES ('TEST2', 'TEST2', 'my_testing@t
 -- Executing main procedure
 EXEC IMPORT_FROM_MODEL_P(GLOBAL_USER_PKG.get_user_id);
 -- Inserting test product to check if the next product has ID number 1001
-INSERT INTO PROD(PROD_NAME, PROD_FORM, PROD_STRENGTH, PROD_PACKAGE, MAH_ID, BLZ7, GTIN, PROD_STOCK, PROD_PRICE)
-VALUES ('TEST NAZWA', 'TEST FORM', 'TEST DAWKA', 'TEST OPAK', 100, 12345, 123456, 999, 69);
+INSERT INTO PROD(PROD_NAME, PROD_FORM, PROD_STRENGTH, PROD_PACKAGE, MAH_ID, BLZ7, GTIN, PROD_STOCK, PROD_PRICE) VALUES ('TEST NAZWA', 'TEST FORM', 'TEST DAWKA', 'TEST OPAK', 100, 12345, 123456, 999, 69);
 -- Show view
 --SELECT * from CATP_PROD_COUNT_V;
 --SELECT * from FULL_PROD_INFO_V;
--- check if every object is VALID
---SELECT OBJECT_TYPE, OBJECT_NAME, STATUS FROM USER_OBJECTS WHERE STATUS = 'VALID' ORDER BY OBJECT_TYPE, OBJECT_NAME;
-SELECT OBJECT_TYPE, OBJECT_NAME, STATUS FROM USER_OBJECTS WHERE STATUS != 'VALID' ORDER BY OBJECT_TYPE, OBJECT_NAME;
---COMMIT;
+
