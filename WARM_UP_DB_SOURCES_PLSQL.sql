@@ -58,7 +58,30 @@ CREATE SEQUENCE CATP_PROD_CATP_PROD_ID_SEQ START WITH 1 INCREMENT BY 1 NOCACHE N
 --======================================================================================
 -- FUNCTIONS
 --======================================================================================
--- Clears the string from excesive dashes and spaces
+CREATE OR REPLACE FUNCTION CLEAN_SPACES_F(v_result VARCHAR2) RETURN VARCHAR2 IS  
+  --############################################################################################
+  -- Function for clearing spaces dashes
+  --############################################################################################
+  BEGIN
+    RETURN REGEXP_REPLACE(v_result, '\s+', ' ');
+  END CLEAN_SPACES_F;
+/
+CREATE OR REPLACE FUNCTION FIRST_WORD_CUT_F(p_post VARCHAR2) RETURN VARCHAR2 IS
+  --############################################################################################
+  -- Returns first word to space or "."
+  --############################################################################################
+  BEGIN
+    RETURN REGEXP_SUBSTR(TRIM(p_post), '^\S+|^[^.]+');
+  END FIRST_WORD_CUT_F;
+/
+CREATE OR REPLACE FUNCTION CLEAN_DASHES_F(p_text VARCHAR2) RETURN VARCHAR2 IS
+  --############################################################################################
+  -- Function for clearing excesive dashes
+  --############################################################################################
+  BEGIN
+    RETURN REGEXP_REPLACE(NVL(TRIM(p_text), ''), '-{2,}', '-'); 
+END CLEAN_DASHES_F;
+/
 CREATE OR REPLACE FUNCTION CLEAR_STRING_F(p_text VARCHAR2) RETURN VARCHAR2 IS
   --############################################################################################
   -- Clears the string from excesive dashes and spaces
@@ -84,11 +107,6 @@ CREATE OR REPLACE FUNCTION PROD_DESCRIBE_F(
   v_prod_package  VARCHAR2(50);
   v_mah_name      VARCHAR2(100);
   v_result        VARCHAR2(200);
-  -- Local function for clearing excesive dashes
-  FUNCTION CLEAN_DASHES_F(p_text VARCHAR2) RETURN VARCHAR2 IS
-    BEGIN
-      RETURN REGEXP_REPLACE(NVL(TRIM(p_text), ''), '-{2,}', '-'); 
-  END CLEAN_DASHES_F;
   --
   BEGIN
     SELECT PROD.PROD_NAME, PROD.PROD_FORM, PROD.PROD_STRENGTH, PROD.PROD_PACKAGE, MAH.NAME 
@@ -112,7 +130,7 @@ CREATE OR REPLACE FUNCTION PROD_DESCRIBE_F(
       v_result := v_result || ' MAH: ' || NVL(v_mah_name, 'NIEOKREŚLONE');
     END IF;
     -- Clearing string from excesive spaces
-    v_result := REGEXP_REPLACE(v_result, '\s+', ' ');
+    v_result := CLEAN_SPACES_F(v_result);
     RETURN v_result;
   EXCEPTION
     WHEN NO_DATA_FOUND THEN
@@ -169,7 +187,7 @@ CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
   FUNCTION GET_FORM_CAT_F(p_post VARCHAR2) RETURN VARCHAR2 IS
     v_category VARCHAR2(100);
   BEGIN
-    v_category := REGEXP_SUBSTR(TRIM(p_post), '^\S+|^[^.]+');
+      v_category := FIRST_WORD_CUT_F(p_post);
     IF v_category IS NOT NULL THEN
       RETURN 'POSTAC: ' || v_category;
     ELSE
@@ -448,4 +466,6 @@ INSERT INTO PROD(PROD_NAME, PROD_FORM, PROD_STRENGTH, PROD_PACKAGE, MAH_ID, BLZ7
 -- Show view
 --SELECT * from CATP_PROD_COUNT_V;
 --SELECT * from FULL_PROD_INFO_V;
+
+SELECT PROD_DESCRIBE_F(5, 1, 1) FROM DUAL;
 
