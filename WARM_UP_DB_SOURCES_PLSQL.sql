@@ -63,7 +63,7 @@ CREATE OR REPLACE FUNCTION CLEAN_SPACES_F(v_result VARCHAR2) RETURN VARCHAR2 IS
   -- Function for clearing spaces dashes
   --############################################################################################
   BEGIN
-    RETURN REGEXP_REPLACE(v_result, '\s+', ' ');
+    RETURN REGEXP_REPLACE(TRIM(v_result), '\s+', ' ');
   END CLEAN_SPACES_F;
 /
 CREATE OR REPLACE FUNCTION FIRST_WORD_CUT_F(p_post VARCHAR2) RETURN VARCHAR2 IS
@@ -183,6 +183,7 @@ CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
   v_mah_id NUMBER;
   v_catp_id NUMBER;
   v_catp_prod_id NUMBER;
+  v_exists NUMBER;
   -- Local function that creates FORM phrase from first word
   FUNCTION GET_FORM_CAT_F(p_post VARCHAR2) RETURN VARCHAR2 IS
     v_category VARCHAR2(100);
@@ -217,8 +218,7 @@ CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
       -- Building category string from first word
       v_category_name := GET_FORM_CAT_F(v_post_clean);
       --INSERTING TO MAH
-      DECLARE
-        v_exists NUMBER;
+      v_exists := 0;
       BEGIN
         SELECT COUNT(*) INTO v_exists FROM MAH WHERE NAME = rec.PNZW;
         IF v_exists = 0 THEN
@@ -231,8 +231,7 @@ CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
           DBMS_OUTPUT.PUT_LINE('Error message: ' || SQLERRM);
       END;
       --INSERTING TO PROD
-      DECLARE
-        v_exists NUMBER;
+      v_exists := 0;
       BEGIN
         SELECT COUNT(*) INTO v_exists
         FROM PROD 
@@ -247,8 +246,7 @@ CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
           DBMS_OUTPUT.PUT_LINE('Error message: ' || SQLERRM);
       END;
       --INSERTING TO CATP
-      DECLARE
-        v_exists NUMBER;
+      v_exists := 0;
       BEGIN
         SELECT COUNT(*) INTO v_exists
         FROM CATP
@@ -267,8 +265,7 @@ CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
           DBMS_OUTPUT.PUT_LINE('Error message: ' || SQLERRM);
       END;  
       --INSERTING TO CATP_PTOD
-      DECLARE
-        v_exists NUMBER;
+      v_exists := 0;
       BEGIN
         SELECT COUNT(*) INTO v_exists
         FROM CATP_PROD
@@ -438,13 +435,20 @@ CREATE OR REPLACE VIEW CATP_PROD_COUNT_V AS
 --
 CREATE OR REPLACE VIEW FULL_PROD_INFO_V AS 
   SELECT 
-    PROD_ID, 
+    PROD.PROD_ID, 
     PROD.PROD_STOCK, 
-    PROD.PROD_PRICE, 
-    PROD_DESCRIBE_F(PROD_ID, 0, 0) AS "PRODUCT NAME", 
+    PROD.PROD_PRICE,
+    -- Product name
+    CLEAN_SPACES_F(
+      CLEAN_DASHES_F(PROD.PROD_NAME) || ' ' ||
+      CLEAN_DASHES_F(PROD.PROD_FORM) || ' ' ||
+      CLEAN_DASHES_F(PROD.PROD_STRENGTH) || ' ' ||
+      CLEAN_DASHES_F(PROD.PROD_PACKAGE)
+    ) AS "PRODUCT NAME",
     MAH.NAME AS "MAH_NAME"
   FROM PROD
-  JOIN MAH ON (PROD.MAH_ID = MAH.MAH_ID)
+  JOIN MAH ON PROD.MAH_ID = MAH.MAH_ID
+  ORDER BY PROD.PROD_ID
   WITH READ ONLY;
 --======================================================================================
 -- TEST AREA
@@ -467,5 +471,5 @@ INSERT INTO PROD(PROD_NAME, PROD_FORM, PROD_STRENGTH, PROD_PACKAGE, MAH_ID, BLZ7
 --SELECT * from CATP_PROD_COUNT_V;
 --SELECT * from FULL_PROD_INFO_V;
 
-SELECT PROD_DESCRIBE_F(5, 1, 1) FROM DUAL;
+--SELECT PROD_DESCRIBE_F(5, 1, 1) FROM DUAL;
 
