@@ -19,8 +19,10 @@ TRUNCATE TABLE CATP;
 TRUNCATE TABLE MAH;
 TRUNCATE TABLE USERS;
 */
---SET SERVEROUTPUT ON;
---SET SERVEROUTPUT OFF;
+/*
+SET SERVEROUTPUT ON;
+SET SERVEROUTPUT OFF;
+*/
 CREATE OR REPLACE PACKAGE GLOBAL_USER_PKG AS
   --############################################################################################
   -- Package consisting of global variable storing actual user_id also providing getter and setter
@@ -214,7 +216,7 @@ CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
       DBMS_OUTPUT.PUT_LINE('--------------------');
       -- String cleaning
       v_post_clean := CLEAR_STRING_F(rec.POST);
-      v_dawk_clean := CLEAR_STRING_F(rec.DAWK);
+      v_dawk_clean := NVL(CLEAR_STRING_F(rec.DAWK), 'nieokreślone');
       -- Building category string from first word
       v_category_name := GET_FORM_CAT_F(v_post_clean);
       --INSERTING TO MAH
@@ -280,6 +282,83 @@ CREATE OR REPLACE PROCEDURE IMPORT_FROM_MODEL_P(p_usr_id NUMBER) AS
       END;  
     END LOOP;
     COMMIT;
+  END;
+/
+--
+CREATE OR REPLACE PROCEDURE UPDATE_FROM_MODEL_P(p_usr_id NUMBER) AS
+  --############################################################################################    
+  -- Procedure that updates product data from model
+  --############################################################################################
+  CURSOR cur_source IS
+    SELECT 
+      m.PRID, m.BLZ7_ID, m.KEAN, m.NAZW, m.POST, m.DAWK, m.OPAK, m.STOCK, m.PRICE, m.NPRD, m.PNZW, m.PKRJ,
+      p.PROD_NAME, p.PROD_FORM, p.PROD_STRENGTH, p.PROD_PACKAGE, p.BLZ7, p.GTIN, p.PROD_STOCK, p.PROD_PRICE
+    FROM EXAMPLE_PRODUCT_MODEL m
+    JOIN PROD p ON p.PROD_ID = m.PRID
+    WHERE 
+      p.PROD_NAME != m.NAZW
+      OR p.PROD_FORM != CLEAR_STRING_F(m.POST)
+      OR p.PROD_STRENGTH != NVL(CLEAR_STRING_F(m.DAWK), 'nieokreślone')
+      OR p.PROD_PACKAGE != m.OPAK
+      OR p.BLZ7 != m.BLZ7_ID
+      OR p.GTIN != m.KEAN
+      OR p.PROD_STOCK != m.STOCK
+      OR p.PROD_PRICE != m.PRICE
+    ORDER BY p.PROD_ID;
+  BEGIN
+    FOR rec IN cur_source LOOP
+      DBMS_OUTPUT.PUT_LINE('Differences for PRID=' || rec.PRID);
+      IF rec.PROD_NAME != rec.NAZW THEN
+        DBMS_OUTPUT.PUT_LINE('  PROD_NAME: ' || rec.PROD_NAME || ' != ' || rec.NAZW);
+        UPDATE PROD
+          SET PROD_NAME = rec.NAZW
+          WHERE PROD_ID = rec.PRID;
+      END IF;
+      IF rec.PROD_FORM != CLEAR_STRING_F(rec.POST) THEN
+        DBMS_OUTPUT.PUT_LINE('  PROD_FORM: ' || rec.PROD_FORM || ' != ' || CLEAR_STRING_F(rec.POST));
+        UPDATE PROD
+          SET PROD_FORM = CLEAR_STRING_F(rec.POST)
+          WHERE PROD_ID = rec.PRID;
+      END IF;
+      IF rec.PROD_STRENGTH != NVL(CLEAR_STRING_F(rec.DAWK), 'nieokreślone') THEN
+        DBMS_OUTPUT.PUT_LINE('  PROD_STRENGTH: ' || rec.PROD_STRENGTH || ' != ' || NVL(CLEAR_STRING_F(rec.DAWK), 'nieokreślone'));
+        UPDATE PROD
+          SET PROD_STRENGTH = NVL(CLEAR_STRING_F(rec.DAWK), 'nieokreślone')
+          WHERE PROD_ID = rec.PRID;
+      END IF;
+      IF rec.PROD_PACKAGE != rec.OPAK THEN
+        DBMS_OUTPUT.PUT_LINE('  PROD_PACKAGE: ' || rec.PROD_PACKAGE || ' != ' || rec.OPAK);
+         UPDATE PROD
+          SET PROD_PACKAGE = rec.OPAK
+          WHERE PROD_ID = rec.PRID;
+      END IF;
+      IF rec.BLZ7 != rec.BLZ7_ID THEN
+        DBMS_OUTPUT.PUT_LINE('  PROD_BLZ7: ' || rec.BLZ7 || ' != ' || rec.BLZ7_ID);
+         UPDATE PROD
+          SET BLZ7 = rec.BLZ7_ID
+          WHERE PROD_ID = rec.PRID;
+      END IF;
+      IF rec.GTIN != rec.KEAN THEN
+        DBMS_OUTPUT.PUT_LINE('  GTIN: ' || rec.GTIN || ' != ' || rec.KEAN);
+        UPDATE PROD
+          SET GTIN = rec.KEAN
+          WHERE PROD_ID = rec.PRID;
+      END IF;
+      IF rec.PROD_STOCK != rec.STOCK THEN
+        DBMS_OUTPUT.PUT_LINE('  STOCK: ' || rec.PROD_STOCK || ' != ' || rec.STOCK);
+        UPDATE PROD
+          SET PROD_STOCK = rec.STOCK
+          WHERE PROD_ID = rec.PRID;
+      END IF;
+      IF rec.PROD_PRICE != rec.PRICE THEN
+        DBMS_OUTPUT.PUT_LINE('  PRICE: ' || rec.PROD_PRICE || ' != ' || rec.PRICE);
+        UPDATE PROD
+          SET PROD_PRICE = rec.PRICE
+          WHERE PROD_ID = rec.PRID;
+      END IF;
+      COMMIT;
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('EVEYTHING CHECKED');
   END;
 /
 --======================================================================================  
@@ -454,8 +533,8 @@ CREATE OR REPLACE VIEW FULL_PROD_INFO_V AS
 -- TEST AREA
 --======================================================================================
 -- Check if every object is VALID
-SELECT OBJECT_TYPE, OBJECT_NAME, STATUS FROM ALL_OBJECTS WHERE STATUS != 'VALID' ORDER BY OBJECT_TYPE, OBJECT_NAME;
---SELECT OBJECT_TYPE, OBJECT_NAME, STATUS FROM ALL_OBJECTS WHERE STATUS = 'VALID' ORDER BY OBJECT_TYPE, OBJECT_NAME;
+--SELECT OBJECT_TYPE, OBJECT_NAME, STATUS FROM DBA_OBJECTS WHERE STATUS != 'VALID' ORDER BY OBJECT_TYPE, OBJECT_NAME;
+--SELECT OBJECT_TYPE, OBJECT_NAME, STATUS FROM DBA_OBJECTS WHERE STATUS = 'VALID' ORDER BY OBJECT_TYPE, OBJECT_NAME;
 -- Setting user to 1
 BEGIN
   GLOBAL_USER_PKG.SET_USER_ID(1);
@@ -465,11 +544,11 @@ END;
 INSERT INTO USERS (NAME, SURNAME, EMAIL) VALUES ('TEST2', 'TEST2', 'my_testing@test.com');
 -- Executing main procedure
 EXEC IMPORT_FROM_MODEL_P(GLOBAL_USER_PKG.get_user_id);
+-- Updating data if something changed in model
+--EXEC UPDATE_FROM_MODEL_P(GLOBAL_USER_PKG.get_user_id);
 -- Inserting test product to check if the next product has ID number 1001
 INSERT INTO PROD(PROD_NAME, PROD_FORM, PROD_STRENGTH, PROD_PACKAGE, MAH_ID, BLZ7, GTIN, PROD_STOCK, PROD_PRICE) VALUES ('TEST NAZWA', 'TEST FORM', 'TEST DAWKA', 'TEST OPAK', 100, 12345, 123456, 999, 69);
 -- Show view
 --SELECT * from CATP_PROD_COUNT_V;
 --SELECT * from FULL_PROD_INFO_V;
-
---SELECT PROD_DESCRIBE_F(5, 1, 1) FROM DUAL;
 
